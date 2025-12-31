@@ -1,0 +1,1343 @@
+/* =====================================================
+   MOVEMENTS - CARDS DE MOVIMENTOS
+   Sistema de Design Unificado - Foco em Legibilidade
+   ===================================================== */
+
+/* === CONTAINER DE MOVIMENTOS === */
+.movements-container {
+    margin-top: var(--space-4);
+}
+
+.movements-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.movements-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+    margin: 0;
+}
+
+.movements-filter {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: var(--space-2) var(--space-4);
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--color-parchment);
+    border: 1px solid var(--color-ink-light);
+    border-radius: var(--radius-sm);
+    color: var(--color-ink-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-height: 40px;
+}
+
+.filter-btn:hover {
+    border-color: var(--color-ink-medium);
+    background: var(--color-parchment-light);
+}
+
+.filter-btn.active {
+    background: var(--color-blood);
+    border-color: var(--color-blood);
+    color: var(--color-parchment-light);
+}
+
+/* === SEÇÃO DE MOVIMENTOS === */
+.movement-section {
+    margin-bottom: var(--space-10);
+}
+
+.movement-section:last-child {
+    margin-bottom: 0;
+}
+
+.movement-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 2px solid var(--color-blood);
+}
+
+.movement-section-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--color-blood);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.movement-section-count {
+    font-size: var(--text-sm);
+    color: var(--color-ink-faded);
+    font-style: italic;
+}
+
+/* === GRID DE MOVIMENTOS === */
+.movement-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+}
+
+/* Uma coluna em mobile para melhor legibilidade */
+@media (min-width: 900px) {
+    .movement-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-6);
+    }
+}
+
+/* === CARD DE MOVIMENTO === */
+.movement-card {
+    position: relative;
+    background: var(--color-parchment-light);
+    border: 1px solid var(--color-ink-light);
+    border-radius: var(--radius-sm);
+    padding: var(--space-5);
+    transition: all var(--transition-fast);
+    overflow: hidden;
+}
+
+.movement-card:hover {
+    border-color: var(--color-ink-medium);
+    box-shadow: var(--shadow-md);
+}
+
+/* Barra lateral colorida */
+.movement-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--color-sepia);
+}
+
+/* Movimento inicial (sempre adquirido) */
+.movement-card-starting::before {
+    background: var(--color-blood);
+}
+
+/* Movimento adquirido */
+.movement-card-acquired {
+    background: rgba(139, 46, 46, 0.03);
+    border-color: var(--color-blood);
+}
+
+.movement-card-acquired::before {
+    background: var(--color-blood);
+    width: 5px;
+}
+
+/* Versão compacta */
+.movement-card-compact {
+    padding: var(--space-3);
+}
+
+.movement-card-compact .movement-name {
+    font-size: var(--text-sm);
+}
+
+/* === HEADER DO CARD === */
+.movement-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+.movement-checkbox {
+    margin-top: 4px;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--color-blood);
+}
+
+.movement-name {
+    flex: 1;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+    line-height: 1.3;
+    margin: 0;
+}
+
+.movement-name label {
+    cursor: pointer;
+}
+
+.movement-card-acquired .movement-name {
+    color: var(--color-blood);
+}
+
+/* Atributo do movimento */
+.movement-attribute {
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    padding: var(--space-1) var(--space-3);
+    background: var(--color-parchment);
+    border: 1px solid var(--color-ink-light);
+    border-radius: var(--radius-sm);
+    color: var(--color-ink-medium);
+    text-transform: uppercase;
+}
+
+/* === TRIGGER (GATILHO) === */
+.movement-trigger {
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    font-style: italic;
+    color: var(--color-sepia-dark);
+    margin-bottom: var(--space-4);
+    line-height: 1.6;
+    padding-left: var(--space-3);
+    border-left: 2px solid var(--color-sepia);
+}
+
+/* === DESCRIÇÃO === */
+.movement-description {
+    font-size: var(--text-base);
+    line-height: 1.8;
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+}
+
+.movement-description:last-child {
+    margin-bottom: 0;
+}
+
+/* === RESULTADOS DE ROLAGEM === */
+.movement-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+}
+
+.movement-result {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-parchment);
+    border-left: 4px solid var(--color-ink-light);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.result-label {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    min-width: 36px;
+    flex-shrink: 0;
+}
+
+.result-text {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-ink);
+}
+
+/* Sucesso (10+) */
+.movement-result-success {
+    border-left-color: var(--color-success);
+}
+
+.movement-result-success .result-label {
+    color: var(--color-success);
+}
+
+/* Sucesso parcial (7-9) */
+.movement-result-partial {
+    border-left-color: var(--color-partial);
+}
+
+.movement-result-partial .result-label {
+    color: var(--color-partial);
+}
+
+/* Falha (6-) */
+.movement-result-fail {
+    border-left-color: var(--color-danger);
+}
+
+.movement-result-fail .result-label {
+    color: var(--color-danger);
+}
+
+/* === LISTA DE OPÇÕES === */
+.movement-options {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 0;
+    background: var(--color-parchment);
+    border: 1px solid var(--color-ink-lightest);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+}
+
+.movement-options .options-label {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-ink-medium);
+    margin-bottom: var(--space-2);
+}
+
+/* Container para lista de opções */
+.movement-options-container {
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-parchment);
+    border: 1px solid var(--color-ink-lightest);
+    border-left: 3px solid var(--color-sepia);
+    border-radius: var(--radius-sm);
+}
+
+/* === OPÇÕES DE ALVO (Ranger - Tiro ao Alvo) === */
+.movement-target-options {
+    margin-top: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.movement-target-option {
+    background: var(--color-parchment);
+    border: 1px solid var(--color-ink-lightest);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+}
+
+.target-option-header {
+    margin-bottom: var(--space-2);
+}
+
+.target-name {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    color: var(--color-ink);
+}
+
+.target-option-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-left: var(--space-3);
+}
+
+.target-result {
+    display: flex;
+    gap: var(--space-2);
+    align-items: flex-start;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+}
+
+.target-result .result-label {
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
+    min-width: 32px;
+    flex-shrink: 0;
+}
+
+.target-result .result-text {
+    color: var(--color-ink);
+}
+
+.target-result-success .result-label {
+    color: var(--color-success);
+}
+
+.target-result-partial .result-label {
+    color: var(--color-partial);
+}
+
+/* Nota adicional do movimento */
+.movement-note {
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-parchment-light);
+    border: 1px dashed var(--color-ink-light);
+    border-radius: var(--radius-sm);
+}
+
+.movement-note p {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-style: italic;
+    color: var(--color-ink-medium);
+    line-height: 1.5;
+}
+
+.movement-options-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.movement-options li,
+.movement-options-list li {
+    position: relative;
+    padding: var(--space-2) var(--space-3);
+    padding-left: calc(var(--space-4) + var(--space-2));
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-ink);
+    margin-bottom: var(--space-1);
+    background: var(--color-parchment-light);
+    border-radius: var(--radius-sm);
+    transition: background 0.15s ease;
+}
+
+.movement-options li:last-child,
+.movement-options-list li:last-child {
+    margin-bottom: 0;
+}
+
+.movement-options li::before,
+.movement-options-list li::before {
+    content: '◆';
+    position: absolute;
+    left: var(--space-2);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-sepia);
+    font-size: var(--text-xs);
+}
+
+/* === MOVIMENTOS BÁSICOS (SEPARADOS) === */
+.basic-moves-section {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 2px solid var(--color-ink-light);
+}
+
+.basic-moves-title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+    margin-bottom: var(--space-4);
+    text-align: center;
+}
+
+.basic-moves-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+}
+
+@media (min-width: 600px) {
+    .basic-moves-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .basic-moves-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Card básico mais compacto */
+.basic-move-card {
+    background: var(--color-parchment-light);
+    border: 1px solid var(--color-ink-light);
+    padding: var(--space-3);
+}
+
+.basic-move-name {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+    margin-bottom: var(--space-2);
+}
+
+.basic-move-trigger {
+    font-size: var(--text-xs);
+    color: var(--color-ink-medium);
+    line-height: 1.5;
+}
+
+/* === CONTADOR DE MOVIMENTOS === */
+.movements-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-parchment);
+    border: 1px solid var(--color-ink-light);
+    font-size: var(--text-sm);
+    color: var(--color-ink-medium);
+}
+
+.movements-counter-value {
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
+    color: var(--color-blood);
+}
+
+/* === BUSCA DE MOVIMENTOS === */
+.movements-search {
+    position: relative;
+    margin-bottom: var(--space-4);
+}
+
+.movements-search-input {
+    width: 100%;
+    padding: var(--space-3);
+    padding-left: var(--space-6);
+    font-size: var(--text-base);
+}
+
+.movements-search-icon {
+    position: absolute;
+    left: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-ink-faded);
+}
+
+/* === ESTADO VAZIO === */
+.movements-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-8);
+    color: var(--color-ink-faded);
+}
+
+.movements-empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-3);
+    opacity: 0.5;
+}
+
+.movements-empty-text {
+    font-style: italic;
+}
+
+/* === MOBILE OPTIMIZATION === */
+@media (max-width: 599px) {
+    .movements-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .movements-filter {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: var(--space-2);
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .filter-btn {
+        flex-shrink: 0;
+    }
+    
+    .movement-header {
+        padding: var(--space-3);
+    }
+    
+    .movement-content {
+        padding: 0 var(--space-3) var(--space-3);
+        padding-left: var(--space-3);
+    }
+}
+
+/* === IMPRESSÃO === */
+@media print {
+    .movement-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    
+    .movement-content {
+        display: block !important;
+    }
+    
+    .movement-toggle {
+        display: none !important;
+    }
+    
+    .movements-filter,
+    .movements-search {
+        display: none;
+    }
+}
+
+/* === ANIMAÇÕES === */
+.movement-content {
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .movement-content,
+    .movement-toggle-icon {
+        animation: none;
+        transition: none;
+    }
+}
+
+/* =====================================================
+   ESCOLHAS INTERATIVAS EM MOVIMENTOS
+   Checkboxes e Radio buttons para seleções
+   ===================================================== */
+
+/* === CONTAINER DE ESCOLHAS === */
+.movement-choices {
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px dashed var(--color-ink-light);
+}
+
+.movement-choices-title {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-blood);
+    margin: 0 0 var(--space-3) 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.movement-choices-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+/* === ITEM DE ESCOLHA === */
+.movement-choice-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-parchment);
+    border: 2px solid var(--color-ink-lightest);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+}
+
+.movement-choice-item:hover {
+    background: var(--color-parchment-light);
+    border-color: var(--color-ink-light);
+}
+
+.movement-choice-item.selected {
+    background: linear-gradient(135deg, 
+        rgba(139, 69, 19, 0.08) 0%, 
+        rgba(139, 69, 19, 0.03) 100%);
+    border-color: var(--color-blood);
+    box-shadow: 0 0 0 1px rgba(139, 69, 19, 0.1);
+}
+
+.movement-choice-item.selected::before {
+    content: '✓';
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-blood);
+    font-weight: bold;
+}
+
+.movement-choice-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--color-parchment-dark);
+}
+
+.movement-choice-item.disabled:hover {
+    background: var(--color-parchment-dark);
+    border-color: var(--color-ink-lightest);
+}
+
+/* === INPUTS (checkbox/radio) === */
+.movement-choice-item input[type="checkbox"],
+.movement-choice-item input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid var(--color-ink-medium);
+    background: var(--color-parchment-light);
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.movement-choice-item input[type="checkbox"] {
+    border-radius: 3px;
+}
+
+.movement-choice-item input[type="radio"] {
+    border-radius: 50%;
+}
+
+.movement-choice-item input[type="checkbox"]:checked,
+.movement-choice-item input[type="radio"]:checked {
+    background: var(--color-blood);
+    border-color: var(--color-blood-dark);
+}
+
+.movement-choice-item input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border: solid var(--color-parchment-light);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.movement-choice-item input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--color-parchment-light);
+    border-radius: 50%;
+}
+
+.movement-choice-item input:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* === TEXTO DA ESCOLHA === */
+.movement-choice-text {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    line-height: 1.4;
+    flex: 1;
+}
+
+.movement-choice-description {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-ink-medium);
+    margin-top: var(--space-1);
+    font-style: italic;
+}
+
+/* === CONTADOR DE SELEÇÕES === */
+.movement-choices-counter {
+    margin: var(--space-3) 0 0 0;
+    font-size: var(--text-xs);
+    color: var(--color-ink-faded);
+    font-style: italic;
+    text-align: right;
+}
+
+.movement-choices-counter.complete {
+    color: var(--color-blood);
+    font-weight: var(--font-semibold);
+    font-style: normal;
+}
+
+/* === MOBILE ADAPTAÇÃO === */
+@media (max-width: 599px) {
+    .movement-choice-item {
+        padding: var(--space-2);
+    }
+    
+    .movement-choice-text {
+        font-size: var(--text-xs);
+    }
+}
+
+/* === GRID DE ESCOLHAS PARA MUITAS OPÇÕES === */
+@media (min-width: 700px) {
+    .movement-choices-multiple .movement-choices-options,
+    .movement-choices-single .movement-choices-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-2);
+    }
+}
+
+@media (min-width: 1000px) {
+    .movement-choices-multiple .movement-choices-options {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* =====================================================
+   CAMPO DE TEXTO EM MOVIMENTOS
+   Para entradas customizadas (ex: nome da divindade)
+   ===================================================== */
+
+.movement-text-input {
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px dashed var(--color-ink-light);
+}
+
+.movement-text-label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-blood);
+    margin-bottom: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.movement-text-field {
+    width: 100%;
+    padding: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-ink);
+    background: var(--color-parchment-light);
+    border: 2px solid var(--color-ink-lightest);
+    border-radius: 4px;
+    transition: all 0.15s ease;
+}
+
+.movement-text-field:hover {
+    border-color: var(--color-ink-light);
+}
+
+.movement-text-field:focus {
+    outline: none;
+    border-color: var(--color-blood);
+    background: var(--color-parchment);
+    box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+}
+
+.movement-text-field::placeholder {
+    color: var(--color-ink-faded);
+    font-style: italic;
+}
+
+/* =====================================================
+   OPÇÕES DE DOMÍNIO (HOLD OPTIONS)
+   Perguntas que podem ser feitas com domínio
+   ===================================================== */
+
+.movement-hold-options {
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-parchment);
+    border-left: 3px solid var(--color-sepia);
+}
+
+.movement-hold-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.movement-hold-item {
+    position: relative;
+    padding: var(--space-2) var(--space-3);
+    padding-left: var(--space-4);
+    margin-bottom: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    background: var(--color-parchment-light);
+    border-radius: 4px;
+    transition: all 0.15s ease;
+}
+
+.movement-hold-item::before {
+    content: '•';
+    position: absolute;
+    left: var(--space-2);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: var(--color-sepia);
+}
+
+.movement-hold-item:hover {
+    background: var(--color-parchment-dark);
+}
+
+/* =====================================================
+   SISTEMA DE VENENOS (LADRÃO)
+   Interface para seleção e gerenciamento de venenos
+   ===================================================== */
+
+.movement-poison-system {
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 2px dashed var(--color-sepia);
+}
+
+.movement-poison-title {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-blood);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: var(--space-3);
+}
+
+.movement-poison-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+}
+
+@media (min-width: 600px) {
+    .movement-poison-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.movement-poison-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-3);
+    background: var(--color-parchment);
+    border: 2px solid var(--color-ink-lightest);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.movement-poison-card:hover {
+    border-color: var(--color-sepia);
+    background: var(--color-parchment-light);
+}
+
+.movement-poison-card.selected {
+    border-color: var(--color-blood);
+    background: linear-gradient(135deg, 
+        rgba(139, 69, 19, 0.05) 0%, 
+        rgba(139, 69, 19, 0.1) 100%);
+    box-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
+}
+
+.movement-poison-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.movement-poison-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.movement-poison-name {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+}
+
+.movement-poison-type {
+    display: inline-block;
+    width: fit-content;
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 3px;
+}
+
+.movement-poison-type-aplicado {
+    color: #2d5016;
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.movement-poison-type-toque {
+    color: #7b1fa2;
+    background: rgba(156, 39, 176, 0.15);
+    border: 1px solid rgba(156, 39, 176, 0.4);
+}
+
+.movement-poison-effect {
+    font-size: var(--text-sm);
+    color: var(--color-ink-light);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.movement-poison-card.selected .movement-poison-name {
+    color: var(--color-blood);
+}
+
+.movement-poison-card.selected .movement-poison-effect {
+    color: var(--color-ink);
+}
+
+/* Informações adicionais sobre venenos */
+.movement-poison-info {
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    background: rgba(139, 69, 19, 0.05);
+    border-radius: 6px;
+    border-left: 3px solid var(--color-sepia);
+}
+
+.movement-poison-rule {
+    font-size: var(--text-sm);
+    color: var(--color-ink-light);
+    margin: 0 0 var(--space-2) 0;
+    line-height: 1.5;
+}
+
+.movement-poison-rule:last-child {
+    margin-bottom: 0;
+}
+
+.movement-poison-rule strong {
+    color: var(--color-ink);
+}
+
+/* =====================================================
+   CONDIÇÕES DE RITUAL (MAGO)
+   Campos editáveis para condições do MJ
+   ===================================================== */
+
+.movement-ritual-conditions {
+    margin-top: var(--space-4);
+    padding: var(--space-3);
+    background: linear-gradient(135deg, 
+        rgba(74, 90, 139, 0.05) 0%, 
+        rgba(74, 90, 139, 0.1) 100%);
+    border-radius: 6px;
+    border-left: 3px solid #4A5A8B;
+}
+
+.movement-ritual-title {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: #4A5A8B;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 0 0 var(--space-3) 0;
+}
+
+.movement-ritual-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.movement-ritual-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2);
+    margin-bottom: var(--space-2);
+    background: var(--color-parchment-light);
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+}
+
+.movement-ritual-item:last-child {
+    margin-bottom: 0;
+}
+
+.ritual-text,
+.ritual-text-before,
+.ritual-text-after {
+    color: var(--color-ink);
+}
+
+.ritual-input {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-sm);
+    font-family: var(--font-body);
+    font-style: italic;
+    color: #4A5A8B;
+    background: var(--color-parchment);
+    border: 1px dashed #4A5A8B;
+    border-radius: 3px;
+    transition: all 0.15s ease;
+}
+
+.ritual-input:focus {
+    outline: none;
+    border-style: solid;
+    background: white;
+    box-shadow: 0 0 0 2px rgba(74, 90, 139, 0.2);
+}
+
+.ritual-input::placeholder {
+    color: var(--color-ink-faded);
+}
+
+/* =====================================================
+   NOTAS DE SISTEMA (GRIMÓRIO, FEITIÇOS)
+   Avisos informativos sobre sistemas futuros
+   ===================================================== */
+
+.movement-system-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    background: rgba(74, 90, 139, 0.08);
+    border-radius: 6px;
+    border: 1px dashed rgba(74, 90, 139, 0.3);
+}
+
+.movement-system-note .note-icon {
+    font-size: var(--text-lg);
+    line-height: 1;
+}
+
+.movement-system-note .note-text {
+    font-size: var(--text-sm);
+    color: #4A5A8B;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.movement-grimoire-note {
+    background: rgba(74, 90, 139, 0.08);
+    border-color: rgba(74, 90, 139, 0.3);
+}
+
+/* Nota de sistema de domínio/hold (Druida) */
+.movement-hold-note {
+    background: rgba(34, 139, 34, 0.08);
+    border-color: rgba(34, 139, 34, 0.3);
+}
+
+.movement-hold-note .note-text {
+    color: #2E7D32;
+}
+
+/* Nota de sistema de Arma Favorita (Guerreiro) */
+.movement-weapon-note {
+    background: rgba(106, 90, 74, 0.08);
+    border-color: rgba(106, 90, 74, 0.3);
+}
+
+.movement-weapon-note .note-text {
+    color: #6A5A4A;
+}
+
+.movement-spell-note {
+    margin-top: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-blood);
+    background: rgba(139, 0, 0, 0.05);
+    border-radius: 4px;
+    border-left: 3px solid var(--color-blood);
+}
+/* === INDICADOR DE XP (Movimentos que geram XP) === */
+.movement-xp-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(255, 215, 0, 0.15));
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    border-radius: 6px;
+}
+
+.xp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: #B8860B;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.xp-trigger {
+    font-size: var(--text-xs);
+    color: var(--color-ink-medium);
+    font-style: italic;
+}
+
+/* === EFEITO DE APETITES (Bárbaro) === */
+.movement-appetite-effect {
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    background: linear-gradient(135deg, rgba(139, 58, 58, 0.08), rgba(139, 58, 58, 0.12));
+    border: 1px solid rgba(139, 58, 58, 0.3);
+    border-radius: 6px;
+}
+
+.appetite-effect-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+    color: #8B3A3A;
+}
+
+.appetite-effect-icon {
+    font-size: 1.2em;
+}
+
+.appetite-effect-text {
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* === MOVIMENTO DE ESCOLHA DE ESTILO (Bárbaro) === */
+.movement-choice-item.selected {
+    background: rgba(139, 58, 58, 0.1);
+    border-color: #8B3A3A;
+}
+
+.movement-choice-description {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-ink-medium);
+    margin-top: var(--space-1);
+    font-weight: normal;
+}
+
+/* Cards de movimento do Bárbaro */
+.movement-card[data-class="barbaro"] .movement-badge-required {
+    background: #8B3A3A;
+}
+
+/* Indicador visual para Forasteiro (sempre ativo) */
+.movement-card[data-move-id="forasteiro"] {
+    border-left: 4px solid #DAA520;
+}
+
+.movement-card[data-move-id="forasteiro"]::after {
+    content: "🌍";
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    font-size: 1.5rem;
+    opacity: 0.3;
+}
+
+/* === AVISO DE MOVIMENTO DE PRIMEIRO AVANÇO === */
+.movement-first-advance-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    margin-top: var(--space-3);
+    background: rgba(255, 152, 0, 0.1);
+    border: 1px solid rgba(255, 152, 0, 0.3);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: #e65100;
+}
+
+.movement-first-advance-note .first-advance-icon {
+    flex-shrink: 0;
+    font-size: 1.1em;
+}
+
+.movement-first-advance-note .first-advance-text {
+    line-height: 1.5;
+    font-weight: var(--font-medium);
+}
+
+/* === OPÇÕES DE COMANDO (Ranger) === */
+.movement-command-options {
+    margin-top: var(--space-3);
+    padding: var(--space-3);
+    background: rgba(34, 139, 34, 0.05);
+    border: 1px solid rgba(34, 139, 34, 0.2);
+    border-radius: var(--radius-sm);
+}
+
+.movement-command-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.movement-command-item {
+    position: relative;
+    padding-left: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    line-height: 1.5;
+}
+
+.movement-command-item::before {
+    content: '🐾';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 0.9em;
+}

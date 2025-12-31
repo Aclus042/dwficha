@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dungeon World - Fichas de Personagem</title>
+    <!-- Fontes otimizadas com display=swap e preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <!-- CSS crítico primeiro -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/class-selection.css">
+    <link rel="stylesheet" href="css/character-sheet.css">
+    <link rel="stylesheet" href="css/movements.css">
+    <link rel="stylesheet" href="css/grimoire.css">
+    <link rel="stylesheet" href="css/signature-weapon.css">
+    <link rel="stylesheet" href="css/animal-companion.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/inventory-cards.css">
+    <link rel="stylesheet" href="css/equipment-library.css">
+    <link rel="stylesheet" href="css/paladin-quest.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Conteúdo dinâmico será renderizado aqui -->
+    </div>
+    
+    <!-- Templates -->
+    <template id="template-class-selection">
+        <main class="class-selection-page">
+            <header class="page-header">
+                <button type="button" class="btn btn-ghost btn-small import-character-btn import-btn-corner">
+                    <span class="btn-icon">📂</span><span class="btn-text">Importar</span>
+                </button>
+                <div class="logo-container">
+                    <div class="logo-decoration logo-decoration-left"></div>
+                    <h1 class="logo">Dungeon World</h1>
+                    <p class="tagline">Fichas de Personagem</p>
+                    <div class="logo-decoration logo-decoration-right"></div>
+                </div>
+            </header>
+            
+            <section class="class-selection">
+                <h2 class="section-title">Escolha Sua Classe</h2>
+                <p class="section-subtitle">Selecione uma classe para começar sua jornada</p>
+                
+                <div class="class-grid" id="class-grid">
+                    <!-- Cards de classes serão inseridos via JavaScript -->
+                </div>
+            </section>
+            
+            <footer class="page-footer">
+                <p>Dungeon World é um jogo de Sage LaTorra e Adam Koebel</p>
+            </footer>
+        </main>
+    </template>
+    
+    <template id="template-character-sheet">
+        <div class="character-sheet">
+            <header class="sheet-header">
+                <!-- Renderizado dinamicamente -->
+            </header>
+            
+            <nav class="sheet-nav" role="navigation" aria-label="Seções da ficha">
+                <!-- Renderizado dinamicamente -->
+            </nav>
+            
+            <main class="sheet-content">
+                <!-- Conteúdo da seção atual -->
+            </main>
+        </div>
+    </template>
+    
+    <!-- Scripts - defer para carregamento assíncrono -->
+    <script defer src="js/data/basic-moves.js"></script>
+    <script defer src="js/data/special-moves.js"></script>
+    <script defer src="js/data/classes/barbaro.js"></script>
+    <script defer src="js/data/classes/bardo.js"></script>
+    <script defer src="js/data/classes/clerigo.js"></script>
+    <script defer src="js/data/classes/druida.js"></script>
+    <script defer src="js/data/classes/guerreiro.js"></script>
+    <script defer src="js/data/classes/ladrao.js"></script>
+    <script defer src="js/data/classes/mago.js"></script>
+    <script defer src="js/data/classes/paladino.js"></script>
+    <script defer src="js/data/classes/ranger.js"></script>
+    <script defer src="js/data/classes-index.js"></script>
+    <script defer src="js/data/spells/clerigo-spells.js"></script>
+    <script defer src="js/data/spells/mago-spells.js"></script>
+    <script defer src="js/utils/helpers.js"></script>
+    <script defer src="js/store/state.js"></script>
+    <script defer src="js/components/class-card.js"></script>
+    <script defer src="js/components/movement-card.js"></script>
+    <script defer src="js/data/equipment-library.js"></script>
+    <script defer src="js/components/inventory-cards.js"></script>
+    <script defer src="js/components/equipment-library-modal.js"></script>
+    <script defer src="js/components/grimoire.js"></script>
+    <script defer src="js/components/signature-weapon.js"></script>
+    <script defer src="js/components/animal-companion.js"></script>
+    <script defer src="js/components/modals.js"></script>
+    <script defer src="js/pages/class-selection.js"></script>
+    <script defer src="js/pages/character-sheet.js"></script>
+    <script defer src="js/router.js"></script>
+    <script defer src="js/app.js"></script>
+    <script defer src="js/components/paladin-quest.js"></script>
+</body>
+</html>

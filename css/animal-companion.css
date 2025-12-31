@@ -1,0 +1,450 @@
+/* =====================================================
+   COMPANHEIRO ANIMAL - ESTILOS DO CONSTRUTOR
+   Visual de ficha de criatura
+   ===================================================== */
+
+/* === CONTAINER PRINCIPAL === */
+.animal-companion-builder {
+    background: 
+        linear-gradient(135deg, 
+            rgba(34, 139, 34, 0.05) 0%, 
+            transparent 50%,
+            rgba(139, 90, 43, 0.03) 100%),
+        var(--color-parchment);
+    border: 2px solid var(--color-ink-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin: var(--space-6) 0;
+    box-shadow: var(--shadow-md);
+}
+
+/* === HEADER === */
+.animal-companion-header {
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 2px solid var(--color-ink-light);
+}
+
+.animal-companion-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+    margin: 0 0 var(--space-2) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.animal-companion-description {
+    font-size: var(--text-sm);
+    color: var(--color-ink-medium);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* === PREVIEW DO COMPANHEIRO === */
+.animal-companion-preview {
+    background: linear-gradient(135deg, 
+        rgba(34, 139, 34, 0.1) 0%, 
+        rgba(139, 90, 43, 0.05) 100%);
+    border: 2px solid rgba(34, 139, 34, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+    min-height: 120px;
+    transition: all 0.3s ease;
+}
+
+.animal-companion-preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    color: var(--color-ink-light);
+    gap: var(--space-2);
+}
+
+.animal-companion-preview-empty .preview-icon {
+    font-size: var(--text-4xl);
+    opacity: 0.5;
+}
+
+.animal-companion-preview-empty .preview-text {
+    font-size: var(--text-sm);
+    font-style: italic;
+}
+
+/* === PREVIEW CONTENT === */
+.animal-companion-preview-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.companion-preview-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.companion-preview-icon {
+    font-size: var(--text-4xl);
+    line-height: 1;
+}
+
+.companion-preview-identity {
+    display: flex;
+    flex-direction: column;
+}
+
+.companion-preview-name {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+}
+
+.companion-preview-species {
+    font-size: var(--text-sm);
+    color: var(--color-ink-medium);
+    font-style: italic;
+}
+
+/* === STATS DO COMPANHEIRO === */
+.companion-preview-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-sm);
+}
+
+.companion-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.companion-stat .stat-label {
+    font-size: var(--text-xs);
+    color: var(--color-ink-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.companion-stat .stat-value {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+}
+
+.companion-stat .stat-ferocity { color: #c62828; }
+.companion-stat .stat-cunning { color: #1565c0; }
+.companion-stat .stat-armor { color: #6d4c41; }
+.companion-stat .stat-instinct { color: #7b1fa2; }
+
+/* === SEÇÕES DO PREVIEW === */
+.companion-preview-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.companion-preview-section .section-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: var(--color-ink-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.companion-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.companion-tag {
+    display: inline-block;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+}
+
+.companion-tag.tag-strength {
+    background: rgba(76, 175, 80, 0.15);
+    color: #2e7d32;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.companion-tag.tag-training {
+    background: rgba(33, 150, 243, 0.15);
+    color: #1565c0;
+    border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.companion-tag.tag-training.tag-base {
+    background: rgba(33, 150, 243, 0.25);
+    font-weight: var(--font-semibold);
+}
+
+.companion-tag.tag-weakness {
+    background: rgba(244, 67, 54, 0.15);
+    color: #c62828;
+    border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* === ETAPAS === */
+.animal-companion-step {
+    margin-bottom: var(--space-5);
+    padding: var(--space-4);
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--color-ink-lightest);
+    border-radius: var(--radius-md);
+}
+
+.animal-companion-step .step-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+.animal-companion-step .step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #228b22 0%, #1a6b1a 100%);
+    color: white;
+    font-weight: var(--font-bold);
+    font-size: var(--text-sm);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.animal-companion-step .step-title {
+    font-weight: var(--font-semibold);
+    color: var(--color-ink);
+    flex: 1;
+}
+
+.animal-companion-step .step-counter {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-ink-medium);
+    background: var(--color-parchment);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-ink-light);
+}
+
+.animal-companion-step .step-counter.complete {
+    background: rgba(76, 175, 80, 0.15);
+    color: #2e7d32;
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+/* === INFO BOX === */
+.animal-companion-step .step-info {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: rgba(33, 150, 243, 0.1);
+    border: 1px solid rgba(33, 150, 243, 0.2);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-ink-medium);
+}
+
+.animal-companion-step .step-info .info-icon {
+    flex-shrink: 0;
+}
+
+/* === INPUT DE NOME === */
+.companion-name-input {
+    width: 100%;
+    max-width: 300px;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    color: var(--color-ink);
+    background: var(--color-parchment);
+    border: 2px solid var(--color-ink-light);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+}
+
+.companion-name-input:focus {
+    outline: none;
+    border-color: #228b22;
+    box-shadow: 0 0 0 3px rgba(34, 139, 34, 0.15);
+}
+
+.companion-name-input::placeholder {
+    color: var(--color-ink-light);
+    font-style: italic;
+}
+
+/* === OPÇÕES DE SELEÇÃO === */
+.animal-companion-builder .step-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.animal-companion-builder .step-options-species {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-2);
+}
+
+.animal-companion-builder .step-options-base {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+}
+
+.animal-companion-builder .step-options-multi {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-2);
+}
+
+/* === OPÇÃO INDIVIDUAL === */
+.step-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-parchment);
+    border: 2px solid var(--color-ink-light);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    text-align: center;
+    min-height: 42px;
+}
+
+.step-option input {
+    display: none;
+}
+
+.step-option:hover:not(.disabled) {
+    border-color: #228b22;
+    background: rgba(34, 139, 34, 0.05);
+}
+
+.step-option.selected {
+    border-color: #228b22;
+    background: rgba(34, 139, 34, 0.15);
+}
+
+.step-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.step-option .option-text {
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+}
+
+/* === OPÇÃO DE BASE === */
+.base-option {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-3);
+}
+
+.base-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+    width: 100%;
+    margin-top: var(--space-2);
+}
+
+.base-stats span {
+    font-size: var(--text-sm);
+    color: var(--color-ink-medium);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-1);
+    background: rgba(255,255,255,0.5);
+    border-radius: var(--radius-sm);
+}
+
+.base-stats span strong {
+    color: var(--color-ink);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+    .animal-companion-builder {
+        padding: var(--space-4);
+    }
+
+    .companion-preview-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .animal-companion-builder .step-options-species {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .animal-companion-builder .step-options-base {
+        grid-template-columns: 1fr;
+    }
+
+    .animal-companion-builder .step-options-multi {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .base-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .companion-preview-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-2);
+    }
+    
+    .companion-stat .stat-label {
+        font-size: 10px;
+    }
+    
+    .companion-stat .stat-value {
+        font-size: var(--text-lg);
+    }
+    
+    .animal-companion-builder .step-options-species {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .animal-companion-builder .step-options-multi {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .base-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

@@ -1,0 +1,175 @@
+/* =====================================================
+   DUNGEON WORLD - VARIÁVEIS DE DESIGN
+   Inspirado em fichas impressas e páginas de livro de RPG
+   ===================================================== */
+
+:root {
+    /* === PALETA PERGAMINHO === */
+    /* Tons de papel envelhecido e tinta */
+    --color-parchment-lightest: #FAF6EF;
+    --color-parchment-light: #F5EDE0;
+    --color-parchment: #EDE4D3;
+    --color-parchment-dark: #DDD2BC;
+    --color-parchment-darkest: #C9BBA3;
+    
+    /* Tons de tinta e texto */
+    --color-ink: #1C1814;
+    --color-ink-black: #1C1814;
+    --color-ink-dark: #2D2823;
+    --color-ink-medium: #4A433A;
+    --color-ink-light: #6B6358;
+    --color-ink-faded: #8B8275;
+    --color-ink-lightest: #D4CFC6;
+    
+    /* === CORES DE DESTAQUE === */
+    /* Vermelho sangue (títulos, destaques) */
+    --color-blood: #8B2E2E;
+    --color-blood-light: #A34545;
+    --color-blood-dark: #6B2222;
+    
+    /* Sépia/Marrom (bordas, molduras) */
+    --color-sepia: #7A5C28;
+    --color-sepia-light: #96783E;
+    --color-sepia-dark: #5E4620;
+    
+    /* Dourado antigo (destaques sutis) */
+    --color-gold-old: #A89050;
+    --color-gold-light: #C4AC6A;
+    --color-gold-dark: #8B7840;
+    
+    /* === ALIASES PARA COMPATIBILIDADE === */
+    --color-flame: var(--color-sepia);
+    --color-flame-light: var(--color-sepia-light);
+    --color-flame-dark: var(--color-sepia-dark);
+    --color-bg-darkest: var(--color-ink-black);
+    --color-bg-dark: var(--color-parchment-dark);
+    --color-bg-medium: var(--color-parchment);
+    --color-bg-light: var(--color-parchment-light);
+    --color-bg-lighter: var(--color-parchment-lightest);
+    --color-text-primary: var(--color-ink-black);
+    --color-text-secondary: var(--color-ink-medium);
+    --color-text-muted: var(--color-ink-faded);
+    
+    /* === CORES DE ESTADO DOS DADOS === */
+    /* Sucesso Total (10+) */
+    --color-success: #2E6B3E;
+    --color-success-light: #3D8B52;
+    --color-success-bg: rgba(46, 107, 62, 0.12);
+    
+    /* Sucesso Parcial (7-9) */
+    --color-partial: #8B6914;
+    --color-partial-light: #A6842E;
+    --color-partial-bg: rgba(139, 105, 20, 0.12);
+    
+    /* Falha (6-) */
+    --color-danger: #8B2E2E;
+    --color-danger-light: #A34545;
+    --color-danger-bg: rgba(139, 46, 46, 0.12);
+    
+    /* Warning / Alerta */
+    --color-warning: #C9A227;
+    --color-warning-light: #E0B93E;
+    --color-warning-bg: rgba(201, 162, 39, 0.12);
+    
+    /* Info (azul discreto) */
+    --color-info: #4A6A8B;
+    --color-info-light: #5E82A6;
+    --color-info-bg: rgba(74, 106, 139, 0.12);
+    
+    /* === CORES DE CLASSE === */
+    --color-class-barbaro: #8B3A3A;
+    --color-class-bardo: #D46A9E;
+    --color-class-clerigo: #9A9A9A;
+    --color-class-druida: #3A6B3A;
+    --color-class-guerreiro: #5A4A3A;
+    --color-class-ladrao: #4A4A4A;
+    --color-class-mago: #5BA3D6;
+    --color-class-paladino: #6B5A2E;
+    --color-class-ranger: #4A5A3A;
+    
+    /* === BORDAS E MOLDURAS === */
+    --border-hairline: 1px solid rgba(44, 40, 35, 0.15);
+    --border-subtle: 1px solid rgba(44, 40, 35, 0.25);
+    --border-light: 1px solid rgba(44, 40, 35, 0.35);
+    --border-medium: 2px solid rgba(44, 40, 35, 0.5);
+    --border-heavy: 3px solid var(--color-ink-dark);
+    --border-decorative: 2px solid var(--color-sepia);
+    --border-base: var(--border-subtle);
+    
+    /* Radius mínimos (aspecto impresso) */
+    --radius-none: 0;
+    --radius-subtle: 2px;
+    --radius-sm: 3px;
+    --radius-base: 4px;
+    --radius-lg: 6px;
+    --radius-xl: 8px;
+    --radius-full: 9999px;
+    --border-radius-sm: 3px;
+    --border-radius-md: 4px;
+    --border-radius-lg: 6px;
+    
+    /* === SOMBRAS SUTIS === */
+    --shadow-sm: 0 1px 2px rgba(28, 24, 20, 0.08);
+    --shadow-md: 0 2px 6px rgba(28, 24, 20, 0.1);
+    --shadow-lg: 0 4px 12px rgba(28, 24, 20, 0.12);
+    --shadow-page: 0 2px 8px rgba(28, 24, 20, 0.06);
+    --shadow-inset: inset 0 1px 3px rgba(28, 24, 20, 0.08);
+    --shadow-glow: 0 0 12px rgba(122, 92, 40, 0.2);
+    
+    /* === TIPOGRAFIA === */
+    --font-display: 'Cinzel', 'Times New Roman', serif;
+    --font-body: 'Crimson Text', 'Georgia', serif;
+    --font-mono: 'Courier New', monospace;
+    
+    /* Tamanhos */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
+    
+    /* Pesos */
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    
+    /* Altura de linha */
+    --leading-tight: 1.3;
+    --leading-normal: 1.6;
+    --leading-relaxed: 1.8;
+    
+    /* === ESPAÇAMENTO === */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    
+    /* === LAYOUT === */
+    --nav-height: 56px;
+    --container-max: 1100px;
+    --container-content: 850px;
+    
+    /* === TRANSIÇÕES === */
+    --transition-fast: 120ms ease-out;
+    --transition-base: 200ms ease-out;
+    --transition-slow: 350ms ease-out;
+    
+    /* === Z-INDEX === */
+    --z-base: 1;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-modal: 500;
+    --z-tooltip: 600;
+}

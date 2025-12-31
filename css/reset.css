@@ -1,0 +1,197 @@
+/* =====================================================
+   RESET CSS - Normalização e Base
+   Estilo de página de livro impresso
+   ===================================================== */
+
+/* === RESET BÁSICO === */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* === DOCUMENTO === */
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-black);
+    background-color: var(--color-parchment);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* === TIPOGRAFIA === */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
+    line-height: var(--leading-tight);
+    color: var(--color-ink-black);
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+h5 { font-size: var(--text-lg); }
+h6 { font-size: var(--text-base); }
+
+p {
+    margin-bottom: var(--space-4);
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+a {
+    color: var(--color-blood);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-blood-dark);
+}
+
+strong, b {
+    font-weight: var(--font-bold);
+}
+
+em, i {
+    font-style: italic;
+}
+
+small {
+    font-size: var(--text-sm);
+}
+
+/* === LISTAS === */
+ul, ol {
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-4);
+}
+
+li {
+    margin-bottom: var(--space-2);
+}
+
+li:last-child {
+    margin-bottom: 0;
+}
+
+/* === FORMULÁRIOS === */
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+input,
+textarea,
+select {
+    background-color: var(--color-parchment-lightest);
+    border: var(--border-light);
+    padding: var(--space-2) var(--space-3);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-sepia);
+    box-shadow: 0 0 0 2px rgba(122, 92, 40, 0.15);
+}
+
+/* Remove spinner de inputs numéricos */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* === MÍDIA === */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+/* === TABELAS === */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* === ACESSIBILIDADE === */
+:focus-visible {
+    outline: 2px solid var(--color-sepia);
+    outline-offset: 2px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* === SCROLLBAR ESTILIZADA === */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-parchment-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-sepia-light);
+    border-radius: 5px;
+    border: 2px solid var(--color-parchment-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-sepia);
+}
+
+/* === SELEÇÃO DE TEXTO === */
+::selection {
+    background-color: rgba(122, 92, 40, 0.25);
+    color: var(--color-ink-black);
+}
