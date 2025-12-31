@@ -212,12 +212,6 @@ const CLASS_LADRAO = {
             required: true
         },
         {
-            id: "moral_flexivel",
-            name: "Moral Flexível",
-            description: "Quando alguém tentar detectar seu alinhamento, você pode lhes informar qualquer alinhamento que quiser.",
-            required: true
-        },
-        {
             id: "envenenador",
             name: "Envenenador",
             description: "Você se torna um mestre na manipulação e uso de determinado veneno. Escolha uma substância da lista abaixo: ela não será mais considerada perigosa quando você a utilizar. Comece o jogo com 3 doses dela de graça. Sempre que tiver tempo para reunir os materiais e um local adequado para fazer a mistura você pode fazer mais 3 doses do veneno escolhido de graça. Repare que alguns venenos são aplicados, o que significa que eles devem ser cuidadosamente administrados ao alvo ou a alguma coisa que ele coma ou beba. Venenos de toque só precisam encostar no alvo, e podem ser até mesmo aplicados na lâmina de uma arma.",
@@ -249,6 +243,12 @@ const CLASS_LADRAO = {
                 }
             ],
             required: true
+        },
+        {
+            id: "moral_flexivel",
+            name: "Moral Flexível",
+            description: "Quando alguém tentar detectar seu alinhamento, você pode lhes informar qualquer alinhamento que quiser.",
+            required: true            
         }
     ],
     
@@ -322,16 +322,17 @@ const CLASS_LADRAO = {
             armorBonus: 1
         },
         {
+            id: "braco_forte_alvo",
+            name: "Braço Forte, No Alvo",
+            description: "Você é capaz de arremessar qualquer arma branca, utilizando-a para disparar. Uma arma branca arremessada será perdida, logo, você não pode escolher reduzir sua munição com 7–9."
+        },
+        {
             id: "lutador_desonesto",
             name: "Lutador Desonesto",
             replaces: "Golpe Desonesto",
             trigger: "Quando usar uma arma precisa ou de mão",
             description: "Quando usar uma arma precisa ou de mão, seu ataque pelas costas causa +1d8 de dano e todos os seus outros ataques causam +1d4 de dano."
-        },
-        {
-            id: "braco_forte_alvo",
-            name: "Braço Forte, No Alvo",
-            description: "Você é capaz de arremessar qualquer arma branca, utilizando-a para disparar. Uma arma branca arremessada será perdida, logo, você não pode escolher reduzir sua munição com 7–9."
+            
         },
         {
             id: "evasao",
@@ -346,16 +347,11 @@ const CLASS_LADRAO = {
             description: "Quando tiver tempo e materiais suficientes, você pode criar um disfarce capaz de enganar quaisquer observadores, fazendo-os acreditar que você seja outra criatura do mesmo tamanho e forma. Suas ações podem lhe entregar, mas sua aparência não."
         },
         {
-            id: "assalto",
-            name: "Assalto",
-            trigger: "Quando parar para planejar o roubo de alguma coisa",
-            description: "Quando parar para planejar o roubo de alguma coisa, diga o que quer roubar e pergunte ao MJ as questões abaixo. Quando agir de acordo com as respostas, você e seus aliados recebem +1 adiante.",
-            options: [
-                "Quem perceberá a ausência do item roubado?",
-                "Qual é a sua defesa mais poderosa?",
-                "Quem virá atrás dele?",
-                "Quem mais o quer?"
-            ]
+            id: "extremamente_cauteloso",
+            name: "Extremamente Cauteloso",
+            replaces: "Cauteloso",
+            trigger: "Quando usar especialista em armadilhas",
+            description: "Quando usar especialista em armadilhas, sempre receba domínio +1, mesmo com 6-. Com 12+, receba domínio 3 e da próxima vez que se aproximar de uma armadilha, o MJ deve imediatamente lhe dizer o que ela faz, o que a dispara, quem a armou ali e como você pode usá-la para seu próprio benefício."            
         },
         {
             id: "rota_fuga",
@@ -369,6 +365,18 @@ const CLASS_LADRAO = {
             }
         },
         {
+            id: "assalto",
+            name: "Assalto",
+            trigger: "Quando parar para planejar o roubo de alguma coisa",
+            description: "Quando parar para planejar o roubo de alguma coisa, diga o que quer roubar e pergunte ao MJ as questões abaixo. Quando agir de acordo com as respostas, você e seus aliados recebem +1 adiante.",
+            options: [
+                "Quem perceberá a ausência do item roubado?",
+                "Qual é a sua defesa mais poderosa?",
+                "Quem virá atrás dele?",
+                "Quem mais o quer?"
+            ]            
+        },
+        {
             id: "alquimista",
             name: "Alquimista",
             replaces: "Produtor",
@@ -380,13 +388,6 @@ const CLASS_LADRAO = {
                 "Seus efeitos demorarão a ocorrer",
                 "Ele terá efeitos colaterais óbvios"
             ]
-        },
-        {
-            id: "extremamente_cauteloso",
-            name: "Extremamente Cauteloso",
-            replaces: "Cauteloso",
-            trigger: "Quando usar especialista em armadilhas",
-            description: "Quando usar especialista em armadilhas, sempre receba domínio +1, mesmo com 6-. Com 12+, receba domínio 3 e da próxima vez que se aproximar de uma armadilha, o MJ deve imediatamente lhe dizer o que ela faz, o que a dispara, quem a armou ali e como você pode usá-la para seu próprio benefício."
         }
     ]
 };
@@ -395,3 +396,4 @@ const CLASS_LADRAO = {
 if (typeof window !== 'undefined') {
     window.CLASS_LADRAO = CLASS_LADRAO;
 }
+
