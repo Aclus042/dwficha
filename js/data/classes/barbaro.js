@@ -298,6 +298,19 @@ const CLASS_BARBARO = {
             multiclassFrom: ["guerreiro", "bardo", "ladrao"]
         },
         {
+            id: "mais_sempre_mais",
+            name: "Mais! Sempre Mais!",
+            description: "Quando satisfizer um de seus apetites de forma extrema (destruindo algo único e significante, ganhando uma fama, riqueza ou poder enormes, etc.) você pode optar por resolvê-lo permanentemente. Risque-o de sua lista e marque XP. Apesar de poder buscar aquele apetite novamente, você não sente mais o desejo ardente que uma vez sentiu. Em seu lugar, escolha um novo apetite da lista ou escreva seu próprio.",
+            grantsXP: true,
+            xpTrigger: "Satisfazer um apetite de forma extrema e resolvê-lo permanentemente"            
+            ]
+        },
+        {
+            id: "marca_poder",
+            name: "Marca de Poder",
+            description: "Quando adquirir este movimento e gastar algum tempo ininterrupto refletindo a respeito de suas glórias passadas, você poderá se marcar com um símbolo de seu poder (uma longa trança amarrada com sinos, tatuagens ou cicatrizes rituais, etc.). Qualquer criatura mortal inteligente que enxergue o símbolo saberá instintivamente que você é uma força a ser reconhecida, e o tratará de acordo."
+        },
+        {
             id: "grito_guerra",
             name: "Grito de Guerra",
             trigger: "Quando entrar na batalha fazendo uma demonstração de força",
@@ -310,12 +323,6 @@ const CLASS_BARBARO = {
             options: [
                 "Seus aliados são encorajados e recebem +1 adiante",
                 "Seus inimigos sentirão medo e agirão de acordo (evitando-o, escondendo-se, atacando com abandono direcionado pelo medo)"
-            ]
-        },
-        {
-            id: "marca_poder",
-            name: "Marca de Poder",
-            description: "Quando adquirir este movimento e gastar algum tempo ininterrupto refletindo a respeito de suas glórias passadas, você poderá se marcar com um símbolo de seu poder (uma longa trança amarrada com sinos, tatuagens ou cicatrizes rituais, etc.). Qualquer criatura mortal inteligente que enxergue o símbolo saberá instintivamente que você é uma força a ser reconhecida, e o tratará de acordo."
         },
         {
             id: "pelo_deus_sangue",
@@ -328,14 +335,7 @@ const CLASS_BARBARO = {
                 partial: "Com 7–9, o sacrifício não foi suficiente, e seus deuses exigem também que você ofereça sua carne, mas ainda lhe concedem o conhecimento ou a bênção.",
                 fail: "Com 6−, você consegue apenas a ira dos espíritos volúveis."
             },
-            requiresSacrificeChoice: true
-        },
-        {
-            id: "mais_sempre_mais",
-            name: "Mais! Sempre Mais!",
-            description: "Quando satisfizer um de seus apetites de forma extrema (destruindo algo único e significante, ganhando uma fama, riqueza ou poder enormes, etc.) você pode optar por resolvê-lo permanentemente. Risque-o de sua lista e marque XP. Apesar de poder buscar aquele apetite novamente, você não sente mais o desejo ardente que uma vez sentiu. Em seu lugar, escolha um novo apetite da lista ou escreva seu próprio.",
-            grantsXP: true,
-            xpTrigger: "Satisfazer um apetite de forma extrema e resolvê-lo permanentemente"
+            requiresSacrificeChoice: true            
         }
     ]
 };
@@ -344,4 +344,5 @@ const CLASS_BARBARO = {
 if (typeof window !== 'undefined') {
     window.CLASS_BARBARO = CLASS_BARBARO;
 }
+
 
