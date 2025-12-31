@@ -75,6 +75,36 @@
     margin-bottom: var(--space-5);
     padding-bottom: var(--space-3);
     border-bottom: 2px solid var(--color-blood);
+    position: relative;
+}
+
+.movement-section-collapsible .movement-section-header {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.movement-section-collapsible .movement-section-header:hover {
+    background: rgba(139, 58, 58, 0.05);
+    margin: 0 calc(-1 * var(--space-2));
+    padding: var(--space-2);
+    padding-bottom: calc(var(--space-3) + var(--space-2));
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.collapse-icon {
+    font-size: var(--text-sm);
+    color: var(--color-blood);
+    transition: transform 0.3s ease;
+    margin-right: var(--space-2);
+}
+
+.movement-section-collapsible.collapsed .collapse-icon {
+    transform: rotate(-90deg);
+}
+
+.movement-section-collapsible.collapsed .movement-grid {
+    display: none;
 }
 
 .movement-section-title {
@@ -85,12 +115,43 @@
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.movement-section-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
 }
 
 .movement-section-count {
     font-size: var(--text-sm);
     color: var(--color-ink-faded);
     font-style: italic;
+}
+
+.movement-slots-counter {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+}
+
+.movement-slots-counter.has-slots {
+    background: linear-gradient(135deg, rgba(34, 139, 34, 0.15) 0%, rgba(46, 125, 50, 0.1) 100%);
+    color: #2E7D32;
+    border: 1px solid rgba(34, 139, 34, 0.3);
+}
+
+.movement-slots-counter.no-slots {
+    background: linear-gradient(135deg, rgba(211, 47, 47, 0.15) 0%, rgba(198, 40, 40, 0.1) 100%);
+    color: #C62828;
+    border: 1px solid rgba(211, 47, 47, 0.3);
 }
 
 /* === GRID DE MOVIMENTOS === */
@@ -1340,4 +1401,58 @@
     left: 0;
     top: 0;
     font-size: 0.9em;
+}
+
+/* === MOVIMENTOS BLOQUEADOS POR NÍVEL === */
+.movement-card-locked {
+    opacity: 0.6;
+    position: relative;
+    pointer-events: none;
+}
+
+.movement-card-locked::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 0, 0, 0.02) 10px,
+        rgba(0, 0, 0, 0.02) 20px
+    );
+    pointer-events: none;
+    border-radius: var(--radius-md);
+}
+
+.movement-lock-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, rgba(160, 82, 45, 0.05) 100%);
+    border: 1px solid rgba(139, 69, 19, 0.3);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-3);
+}
+
+.movement-lock-badge .lock-icon {
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
+.movement-lock-badge .lock-text {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: rgba(139, 69, 19, 0.9);
+    line-height: 1.4;
+}
+
+.movement-card-locked .movement-checkbox {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.movement-card-locked .movement-name {
+    color: var(--color-ink-medium);
 }

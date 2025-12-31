@@ -12,6 +12,7 @@ const Helpers = {
      * @returns {number} - Modificador (-3 a +3)
      */
     calculateModifier(value) {
+        if (value === null || value === undefined) return 0;
         if (value <= 3) return -3;
         if (value <= 5) return -2;
         if (value <= 8) return -1;
@@ -38,6 +39,7 @@ const Helpers = {
      * @returns {number} - PV máximo
      */
     calculateMaxHP(baseHP, constitution) {
+        // PV = base da classe + constituição (valor bruto, não modificador)
         return baseHP + constitution;
     },
 
@@ -179,6 +181,108 @@ const Helpers = {
      */
     deepClone(obj) {
         return JSON.parse(JSON.stringify(obj));
+    },
+
+    /**
+     * Verifica se um movimento está disponível baseado no nível do personagem
+     * @param {Object} move - Movimento a verificar
+     * @param {number} characterLevel - Nível atual do personagem
+     * @param {string} moveCategory - Categoria do movimento: 'starting', '2-5', '6-10'
+     * @returns {Object} - { available: boolean, reason: string }
+     */
+    isMoveAvailable(move, characterLevel, moveCategory) {
+        // Movimentos iniciais sempre disponíveis
+        if (moveCategory === 'starting' || move.required) {
+            return { available: true, reason: null };
+        }
+        
+        // Movimentos 2-5: requer nível 2+
+        if (moveCategory === '2-5') {
+            if (characterLevel < 2) {
+                return { 
+                    available: false, 
+                    reason: `Requer nível 2 ou superior (você é nível ${characterLevel})` 
+                };
+            }
+            return { available: true, reason: null };
+        }
+        
+        // Movimentos 6-10: requer nível 6+
+        if (moveCategory === '6-10') {
+            if (characterLevel < 6) {
+                return { 
+                    available: false, 
+                    reason: `Requer nível 6 ou superior (você é nível ${characterLevel})` 
+                };
+            }
+            return { available: true, reason: null };
+        }
+        
+        // Default: disponível
+        return { available: true, reason: null };
+    },
+
+    /**
+     * Retorna a categoria de um movimento baseado na lista em que ele está
+     * @param {Object} classData - Dados da classe
+     * @param {string} moveId - ID do movimento
+     * @returns {string} - 'starting', '2-5', '6-10', ou null
+     */
+    getMoveCategory(classData, moveId) {
+        if (!classData) return null;
+        
+        if (classData.startingMoves?.some(m => m.id === moveId)) {
+            return 'starting';
+        }
+        
+        if (classData.advancedMoves2_5?.some(m => m.id === moveId)) {
+            return '2-5';
+        }
+        
+        if (classData.advancedMoves6_10?.some(m => m.id === moveId)) {
+            return '6-10';
+        }
+        
+        return null;
+    },
+
+    /**
+     * Calcula quantos movimentos o personagem pode ter no total
+     * @param {number} level - Nível do personagem
+     * @returns {number} - Número total de movimentos permitidos (excluindo iniciais)
+     */
+    getMaxAdvancedMoves(level) {
+        // Nível 1 = 0 movimentos avançados
+        // Nível 2+ = 1 movimento por nível acima de 1
+        return Math.max(0, level - 1);
+    },
+
+    /**
+     * Verifica quantos movimentos avançados o personagem pode ainda escolher
+     * @param {Object} character - Dados do personagem
+     * @param {Object} classData - Dados da classe
+     * @returns {number} - Número de movimentos ainda disponíveis para escolher
+     */
+    getAvailableMoveSlots(character, classData) {
+        if (!character || !classData) return 0;
+        
+        const maxMoves = this.getMaxAdvancedMoves(character.level);
+        
+        // Conta quantos movimentos avançados já foram adquiridos
+        const acquiredMoves = character.acquiredMoves || [];
+        const startingMoveIds = (classData.startingMoves || []).map(m => m.id);
+        
+        // Filtra apenas movimentos que não são iniciais
+        // Movimentos de multiclasse e seus poderes derivados contam como 1 só
+        const advancedMoveCount = acquiredMoves.filter(id => !startingMoveIds.includes(id)).length;
+        
+        // NÃO adiciona movimentos de multiclasse separadamente, pois eles já estão
+        // contados através do movimento que os concede (ex: "Amador em Multiclasse")
+        // const multiclassMoveCount = (character.multiclassMoves || []).length;
+        
+        const totalAdvanced = advancedMoveCount;
+        
+        return Math.max(0, maxMoves - totalAdvanced);
     },
 
     /**

@@ -19,12 +19,32 @@ const MovementCard = {
             isStarting = false,
             compact = false,
             showAttribute = true,
-            characterData = null
+            characterData = null,
+            moveCategory = null,
+            classData = null
         } = options;
 
         const card = document.createElement('div');
         card.className = `movement-card ${compact ? 'movement-card-compact' : ''}`;
         card.setAttribute('data-move-id', move.id);
+        
+        // Verificação de nível
+        let isLocked = false;
+        let lockReason = null;
+        if (characterData && moveCategory && classData) {
+            const availability = Helpers.isMoveAvailable(move, characterData.level, moveCategory);
+            isLocked = !availability.available;
+            lockReason = availability.reason;
+            
+            // Verifica se ainda há slots disponíveis (apenas para movimentos não adquiridos e avançados)
+            if (!isLocked && !isAcquired && moveCategory !== 'starting') {
+                const availableSlots = Helpers.getAvailableMoveSlots(characterData, classData);
+                if (availableSlots <= 0) {
+                    isLocked = true;
+                    lockReason = `Sem slots disponíveis (você pode escolher ${Helpers.getMaxAdvancedMoves(characterData.level)} movimento${Helpers.getMaxAdvancedMoves(characterData.level) !== 1 ? 's' : ''} avançado${Helpers.getMaxAdvancedMoves(characterData.level) !== 1 ? 's' : ''})`;
+                }
+            }
+        }
         
         if (isStarting) {
             card.classList.add('movement-card-starting');
@@ -37,10 +57,26 @@ const MovementCard = {
         if (isAcquired) {
             card.classList.add('movement-card-acquired');
         }
+        
+        if (isLocked) {
+            card.classList.add('movement-card-locked');
+            card.setAttribute('data-lock-reason', lockReason);
+        }
 
         // Cabeçalho do movimento
-        const header = this.renderHeader(move, { showCheckbox, isAcquired, showAttribute });
+        const header = this.renderHeader(move, { showCheckbox, isAcquired, showAttribute, isLocked });
         card.appendChild(header);
+        
+        // Indicador de bloqueio por nível
+        if (isLocked && lockReason) {
+            const lockBadge = document.createElement('div');
+            lockBadge.className = 'movement-lock-badge';
+            lockBadge.innerHTML = `
+                <span class="lock-icon">🔒</span>
+                <span class="lock-text">${lockReason}</span>
+            `;
+            card.appendChild(lockBadge);
+        }
 
         // Gatilho (trigger)
         if (move.trigger) {
@@ -339,7 +375,7 @@ const MovementCard = {
      * Renderiza o cabeçalho do movimento
      */
     renderHeader(move, options = {}) {
-        const { showCheckbox, isAcquired, showAttribute } = options;
+        const { showCheckbox, isAcquired, showAttribute, isLocked } = options;
         
         const header = document.createElement('div');
         header.className = 'movement-header';
@@ -351,6 +387,7 @@ const MovementCard = {
             checkbox.className = 'movement-checkbox';
             checkbox.checked = isAcquired;
             checkbox.id = `move-${move.id}`;
+            checkbox.disabled = isLocked; // Desabilita se bloqueado
             checkbox.addEventListener('change', (e) => {
                 this.handleToggleMove(move.id, e.target.checked, move);
             });
@@ -1030,12 +1067,30 @@ const MovementCard = {
     renderSection(title, moves, options = {}) {
         const section = document.createElement('div');
         section.className = 'movement-section';
+        
+        // Adiciona classe especial para seções colapsáveis
+        if (options.collapsible) {
+            section.classList.add('movement-section-collapsible');
+            section.classList.add('collapsed'); // Começa colapsada
+        }
 
         const header = document.createElement('div');
         header.className = 'movement-section-header';
+        
+        // Adiciona funcionalidade de collapse
+        if (options.collapsible) {
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', () => {
+                section.classList.toggle('collapsed');
+            });
+        }
+        
         header.innerHTML = `
+            ${options.collapsible ? '<span class="collapse-icon">▼</span>' : ''}
             <h3 class="movement-section-title">${title}</h3>
-            <span class="movement-section-count">${moves.length} movimentos</span>
+            <div class="movement-section-info">
+                <span class="movement-section-count">${moves.length} movimentos</span>
+            </div>
         `;
         section.appendChild(header);
 
@@ -1052,7 +1107,9 @@ const MovementCard = {
             const card = this.render(move, {
                 ...options,
                 isAcquired,
-                characterData
+                characterData,
+                moveCategory: options.moveCategory || null,
+                classData: options.classData || null
             });
             grid.appendChild(card);
         });
@@ -1102,6 +1159,34 @@ const MovementCard = {
             fragment.appendChild(startingSection);
         }
         
+        // Seção de Movimentos Avançados Adquiridos
+        const allAdvancedMoves = [
+            ...(classData.advancedMoves2_5 || []),
+            ...(classData.advancedMoves6_10 || [])
+        ];
+        const acquiredAdvancedMoves = allAdvancedMoves.filter(move => acquiredIds.has(move.id));
+        
+        if (acquiredAdvancedMoves.length > 0) {
+            const acquiredSection = this.renderSection(
+                'Movimentos Avançados',
+                acquiredAdvancedMoves,
+                {
+                    isAcquired: true,
+                    showCheckbox: false,
+                    classData: classData
+                }
+            );
+            fragment.appendChild(acquiredSection);
+        }
+        
+        // Movimentos de Multiclasse (renderiza aqui, antes das cascatas)
+        const character = Store.get('character');
+        const multiclassMoves = character?.multiclassMoves || [];
+        if (multiclassMoves.length > 0) {
+            const multiclassSection = this.renderMulticlassMovesSection(multiclassMoves);
+            fragment.appendChild(multiclassSection);
+        }
+        
         // Sistema de Arma Favorita (Guerreiro)
         if (classData.signatureWeapon && typeof SignatureWeapon !== 'undefined') {
             const weaponBuilder = SignatureWeapon.render(classData.signatureWeapon);
@@ -1127,7 +1212,10 @@ const MovementCard = {
                 classData.advancedMoves2_5,
                 {
                     showCheckbox: true,
-                    isAcquired: (move) => acquiredIds.has(move.id)
+                    isAcquired: (move) => acquiredIds.has(move.id),
+                    moveCategory: '2-5',
+                    classData: classData,
+                    collapsible: true
                 }
             );
             fragment.appendChild(advanced2_5);
@@ -1140,7 +1228,10 @@ const MovementCard = {
                 classData.advancedMoves6_10,
                 {
                     showCheckbox: true,
-                    isAcquired: (move) => acquiredIds.has(move.id)
+                    isAcquired: (move) => acquiredIds.has(move.id),
+                    moveCategory: '6-10',
+                    classData: classData,
+                    collapsible: true
                 }
             );
             fragment.appendChild(advanced6_10);
@@ -1287,10 +1378,15 @@ const MovementCard = {
 
         Store.setCharacterProperty('acquiredMoves', moves);
 
-        // Dispara evento
+        // Dispara evento para atualizar a UI
         document.dispatchEvent(new CustomEvent('movementToggled', {
             detail: { moveId, acquired }
         }));
+        
+        // Re-renderiza a seção de movimentos para atualizar os contadores e bloqueios
+        if (typeof CharacterSheetPage !== 'undefined') {
+            CharacterSheetPage.renderSection('movimentos');
+        }
     },
 
     /**
@@ -1306,6 +1402,111 @@ const MovementCard = {
             'car': 'Carisma'
         };
         return names[attr.toLowerCase()] || attr;
+    },
+
+    /**
+     * Renderiza a seção de movimentos de multiclasse
+     * @param {Array} multiclassMoves - Movimentos obtidos via multiclasse
+     * @returns {HTMLElement}
+     */
+    renderMulticlassMovesSection(multiclassMoves) {
+        const section = document.createElement('div');
+        section.className = 'movement-section multiclass-section';
+        
+        const header = document.createElement('div');
+        header.className = 'movement-section-header';
+        header.innerHTML = `
+            <h3 class="movement-section-title">🌟 Movimentos de Multiclasse</h3>
+            <div class="movement-section-info">
+                <span class="movement-section-count">${multiclassMoves.length} movimento${multiclassMoves.length > 1 ? 's' : ''}</span>
+            </div>
+        `;
+        section.appendChild(header);
+        
+        const grid = document.createElement('div');
+        grid.className = 'movement-grid multiclass-moves-grid';
+        
+        multiclassMoves.forEach(move => {
+            const classData = getClassById(move.fromClass);
+            const displayData = CLASS_LIST.find(c => c.id === move.fromClass);
+            
+            // Busca dados completos do movimento se não estiverem salvos
+            let moveDescription = move.description;
+            let moveResults = move.results;
+            let moveTrigger = move.trigger;
+            let moveAttribute = move.attribute;
+            let moveOptions = move.options;
+            let moveLoreOptions = move.loreOptions;
+            
+            // Sempre busca do original para garantir dados completos
+            if (classData) {
+                const allMoves = [
+                    ...(classData.startingMoves || []),
+                    ...(classData.advancedMoves2_5 || []),
+                    ...(classData.advancedMoves6_10 || [])
+                ];
+                const originalMove = allMoves.find(m => m.id === move.moveId);
+                if (originalMove) {
+                    moveDescription = moveDescription || originalMove.description;
+                    moveResults = moveResults || originalMove.results;
+                    moveTrigger = moveTrigger || originalMove.trigger;
+                    moveAttribute = moveAttribute || originalMove.attribute;
+                    moveOptions = moveOptions || originalMove.options;
+                    moveLoreOptions = moveLoreOptions || originalMove.loreOptions;
+                }
+            }
+            
+            // Renderiza opções se existirem
+            let optionsHtml = '';
+            if (moveOptions && moveOptions.length > 0) {
+                optionsHtml = `
+                    <div class="movement-options">
+                        <ul class="movement-options-list">
+                            ${moveOptions.map(opt => `<li>${opt}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            if (moveLoreOptions && moveLoreOptions.length > 0) {
+                optionsHtml = `
+                    <div class="movement-options">
+                        <span class="options-label">Áreas de conhecimento:</span>
+                        <ul class="movement-options-list">
+                            ${moveLoreOptions.map(opt => `<li>${opt}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            const card = document.createElement('div');
+            card.className = 'movement-card movement-card-acquired movement-card-multiclass';
+            card.style.setProperty('--class-color', displayData?.color || '#666');
+            
+            card.innerHTML = `
+                <div class="movement-header">
+                    <span class="movement-badge movement-badge-multiclass" title="De: ${classData?.name || move.fromClass}">
+                        ${displayData?.icon || '📜'} ${classData?.name || move.fromClass}
+                    </span>
+                    ${moveAttribute ? `<span class="movement-attribute">+${moveAttribute.toUpperCase()}</span>` : ''}
+                </div>
+                <h4 class="movement-name">${move.name}</h4>
+                ${moveTrigger ? `<p class="movement-trigger">${moveTrigger}</p>` : ''}
+                <div class="movement-description">${Helpers.formatMovementText(moveDescription || '')}</div>
+                ${optionsHtml}
+                ${moveResults ? `
+                    <div class="movement-results">
+                        ${moveResults.success ? `<div class="result result-success"><strong>10+:</strong> ${moveResults.success}</div>` : ''}
+                        ${moveResults.partial ? `<div class="result result-partial"><strong>7-9:</strong> ${moveResults.partial}</div>` : ''}
+                        ${moveResults.fail ? `<div class="result result-fail"><strong>6-:</strong> ${moveResults.fail}</div>` : ''}
+                    </div>
+                ` : ''}
+            `;
+            
+            grid.appendChild(card);
+        });
+        
+        section.appendChild(grid);
+        return section;
     }
 };
 

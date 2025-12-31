@@ -748,6 +748,9 @@ const CharacterSheetPage = {
                 const character = Store.get('character');
                 const debilities = { ...character.debilities, [attr]: checkbox.checked };
                 Store.setCharacterProperty('debilities', debilities);
+                
+                // Re-renderiza a seção de dados para atualizar os modificadores
+                this.renderSection('dados');
             });
         });
     },
@@ -1002,13 +1005,6 @@ const CharacterSheetPage = {
                     character.acquiredMoves || []
                 );
                 content.appendChild(classMoves);
-                
-                // Renderiza movimentos de multiclasse
-                const multiclassMoves = character.multiclassMoves || [];
-                if (multiclassMoves.length > 0) {
-                    const multiclassSection = this.renderMulticlassMovesSection(multiclassMoves);
-                    content.appendChild(multiclassSection);
-                }
                 break;
 
             case 'basicos':

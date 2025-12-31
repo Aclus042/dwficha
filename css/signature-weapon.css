@@ -213,57 +213,62 @@
    OPÇÕES EM GRID (Tipo base, Distância, Aparência)
    ===================================================== */
 
-.step-options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+.signature-weapon-builder .step-options-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-2);
+    flex-direction: initial;
 }
 
-.step-option {
+.signature-weapon-builder .step-option {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
+    justify-content: center;
+    gap: var(--space-1);
+    padding: var(--space-2);
     background: rgba(255, 255, 255, 0.8);
     border: 2px solid rgba(106, 90, 74, 0.2);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-align: center;
 }
 
-.step-option:hover {
+.signature-weapon-builder .step-option:hover {
     border-color: rgba(106, 90, 74, 0.4);
     background: rgba(255, 255, 255, 1);
 }
 
-.step-option.selected {
+.signature-weapon-builder .step-option.selected {
     border-color: #6A5A4A;
     background: rgba(106, 90, 74, 0.1);
 }
 
-.step-option input[type="radio"] {
-    width: 16px;
-    height: 16px;
+.signature-weapon-builder .step-option input[type="radio"] {
+    width: 14px;
+    height: 14px;
     accent-color: #6A5A4A;
     flex-shrink: 0;
+    margin: 0;
 }
 
-.step-option .option-text {
+.signature-weapon-builder .step-option .option-text {
     font-size: var(--text-sm);
     color: var(--color-text);
+    white-space: nowrap;
 }
 
 /* =====================================================
    OPÇÕES DE MELHORIAS (Lista)
    ===================================================== */
 
-.step-options-list {
-    display: flex;
-    flex-direction: column;
+.signature-weapon-builder .step-options-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-2);
 }
 
-.enhancement-option {
+.signature-weapon-builder .enhancement-option {
     display: flex;
     align-items: flex-start;
     gap: var(--space-2);
@@ -355,8 +360,12 @@
         padding: var(--space-3);
     }
 
-    .step-options-grid {
+    .signature-weapon-builder .step-options-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .signature-weapon-builder .step-options-list {
+        grid-template-columns: 1fr;
     }
 
     .weapon-preview-stats {
@@ -375,7 +384,11 @@
 }
 
 @media (max-width: 480px) {
-    .step-options-grid {
+    .signature-weapon-builder .step-options-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .signature-weapon-builder .step-options-list {
         grid-template-columns: 1fr;
     }
 
@@ -383,11 +396,16 @@
         font-size: var(--text-xs);
     }
 
-    .step-option {
+    .signature-weapon-builder .step-option {
         padding: var(--space-2);
+        font-size: var(--text-xs);
     }
 
-    .enhancement-option {
+    .signature-weapon-builder .step-option .option-text {
+        font-size: var(--text-xs);
+    }
+
+    .signature-weapon-builder .enhancement-option {
         padding: var(--space-2);
     }
 }

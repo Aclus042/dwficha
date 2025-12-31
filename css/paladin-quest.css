@@ -51,12 +51,12 @@
 .step-title {
     color: var(--color-ink);
 }
-.step-options {
-    display: flex;
-    flex-direction: column;
+.paladin-quest-builder .step-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-2);
 }
-.step-option {
+.paladin-quest-builder .step-option {
     display: flex;
     align-items: flex-start;
     gap: var(--space-2);
@@ -66,11 +66,11 @@
     padding: var(--space-2) var(--space-3);
     transition: border 0.15s;
 }
-.step-option.selected {
+.paladin-quest-builder .step-option.selected {
     border-color: var(--color-blood);
     background: var(--color-parchment);
 }
-.step-option.disabled {
+.paladin-quest-builder .step-option.disabled {
     opacity: 0.5;
     pointer-events: none;
 }
@@ -164,4 +164,11 @@
 .tag-vow {
     background: var(--color-ink-medium);
     color: var(--color-parchment-light);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .paladin-quest-builder .step-options {
+        grid-template-columns: 1fr;
+    }
 }

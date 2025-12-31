@@ -452,12 +452,9 @@ const AttributesModal = {
             Store.setCharacterProperty(`attributes.${attr.id}`, this.assignments[attr.id]);
         });
 
-        // Atualiza HP máximo baseado na nova CON
+        // Atualiza HP para o máximo após distribuir atributos
         const newMaxHP = Helpers.calculateMaxHP(classData.baseHP, this.assignments.con);
-        if (character.currentHP === Helpers.calculateMaxHP(classData.baseHP, character.attributes.con)) {
-            // Se estava com HP cheio, mantém cheio
-            Store.setCharacterProperty('currentHP', newMaxHP);
-        }
+        Store.setCharacterProperty('currentHP', newMaxHP);
 
         // Marca que os atributos foram definidos
         Store.setCharacterProperty('attributesSet', true);

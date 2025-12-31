@@ -137,18 +137,29 @@ const Store = {
             notes: '',
             
             // Atributos
+            // Atributos - não definidos até o jogador distribuí-los
             attributes: {
-                for: 10,
-                des: 10,
-                con: 10,
-                int: 10,
-                sab: 10,
-                car: 10
+                for: null,
+                des: null,
+                con: null,
+                int: null,
+                sab: null,
+                car: null
             },
             
-            // Combate
-            currentHP: classData.baseHP + 10, // Assumindo CON 10
+            // Combate - inicia apenas com HP base (sem CON) até distribuir atributos
+            currentHP: classData.baseHP,
             armor: 0,
+            
+            // Debilidades
+            debilities: {
+                for: false,
+                des: false,
+                con: false,
+                int: false,
+                sab: false,
+                car: false
+            },
             
             // Inventário
             coins: startingCoins,
@@ -157,6 +168,7 @@ const Store = {
             
             // Movimentos
             acquiredMoves: [],
+            movesPerLevel: {}, // Rastreia quantos movimentos foram adquiridos em cada nível
             
             // Dados específicos de classe
             classSpecific: {}
@@ -249,13 +261,25 @@ const Store = {
         
         if (!classData) return null;
 
-        const mods = {
+        // Calcula modificadores base
+        const baseMods = {
             for: Helpers.calculateModifier(char.attributes.for),
             des: Helpers.calculateModifier(char.attributes.des),
             con: Helpers.calculateModifier(char.attributes.con),
             int: Helpers.calculateModifier(char.attributes.int),
             sab: Helpers.calculateModifier(char.attributes.sab),
             car: Helpers.calculateModifier(char.attributes.car)
+        };
+
+        // Aplica penalidades de debilidades (-1 por debilidade)
+        const debilities = char.debilities || {};
+        const mods = {
+            for: baseMods.for - (debilities.for ? 1 : 0),
+            des: baseMods.des - (debilities.des ? 1 : 0),
+            con: baseMods.con - (debilities.con ? 1 : 0),
+            int: baseMods.int - (debilities.int ? 1 : 0),
+            sab: baseMods.sab - (debilities.sab ? 1 : 0),
+            car: baseMods.car - (debilities.car ? 1 : 0)
         };
 
         const maxLoad = Helpers.calculateMaxLoad(classData.baseLoad, mods.for);
@@ -272,9 +296,14 @@ const Store = {
         const movementArmorBonus = this.calculateMovementArmorBonus(char, classData);
         totalArmor += movementArmorBonus;
 
+        // maxHP só é calculado se CON foi definida
+        const maxHP = char.attributes.con !== null 
+            ? Helpers.calculateMaxHP(classData.baseHP, char.attributes.con)
+            : classData.baseHP;
+
         return {
             modifiers: mods,
-            maxHP: Helpers.calculateMaxHP(classData.baseHP, char.attributes.con),
+            maxHP: maxHP,
             maxLoad: maxLoad,
             currentLoad: currentLoad,
             totalArmor: totalArmor,
