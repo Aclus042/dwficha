@@ -303,7 +303,6 @@ const CLASS_BARBARO = {
             description: "Quando satisfizer um de seus apetites de forma extrema (destruindo algo único e significante, ganhando uma fama, riqueza ou poder enormes, etc.) você pode optar por resolvê-lo permanentemente. Risque-o de sua lista e marque XP. Apesar de poder buscar aquele apetite novamente, você não sente mais o desejo ardente que uma vez sentiu. Em seu lugar, escolha um novo apetite da lista ou escreva seu próprio.",
             grantsXP: true,
             xpTrigger: "Satisfazer um apetite de forma extrema e resolvê-lo permanentemente"            
-            ]
         },
         {
             id: "marca_poder",
@@ -323,6 +322,7 @@ const CLASS_BARBARO = {
             options: [
                 "Seus aliados são encorajados e recebem +1 adiante",
                 "Seus inimigos sentirão medo e agirão de acordo (evitando-o, escondendo-se, atacando com abandono direcionado pelo medo)"
+                ]
         },
         {
             id: "pelo_deus_sangue",
