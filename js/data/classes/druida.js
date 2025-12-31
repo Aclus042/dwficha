@@ -170,6 +170,18 @@ const CLASS_DRUIDA = {
     // MOVIMENTOS INICIAIS
     startingMoves: [
         {
+            id: "nutrido_natureza",
+            name: "Nutrido pela Natureza",
+            description: "Você não precisa comer ou beber nada. Se um movimento exigir que você marque uma ração, simplesmente ignore isso.",
+            required: true
+        },
+        {
+            id: "linguagem_espiritos",
+            name: "Linguagem dos Espíritos",
+            description: "Os grunhidos, latidos, guinchos e chamados das criaturas selvagens são uma forma de linguagem para você. Você é capaz de compreender qualquer animal nativo da sua terra ou que seja similar a algum cuja essência tenha estudado.",
+            required: true            
+        },
+        {
             id: "nascido_solo",
             name: "Nascido do Solo",
             description: "Você aprendeu sua magia em um local cujos espíritos são poderosos e antigos, e eles o marcaram como um deles. Independente de onde vá, eles vivem dentro de você, e o permitirão assumir suas formas. Escolha uma das opções a seguir – ela representa a terra a qual você se encontra ligado. Sempre que se metamorfosear, você será capaz de assumir a forma de qualquer animal que vive em sua terra.",
@@ -189,19 +201,7 @@ const CLASS_DRUIDA = {
             requiresMark: true,
             markDescription: "Escolha uma marca – um atributo físico que o identifica como um nascido do solo. Pode ser uma característica animal como antenas, ou as manchas de um leopardo, ou algo mais genérico, como cabelos que se parecem com folhas, ou olhos de cristal brilhante. Sua marca permanece independente da forma que assumir.",
             markPlaceholder: "Ex: Olhos de coruja, manchas de leopardo, cabelo como folhas...",
-            required: true
-        },
-        {
-            id: "nutrido_natureza",
-            name: "Nutrido pela Natureza",
-            description: "Você não precisa comer ou beber nada. Se um movimento exigir que você marque uma ração, simplesmente ignore isso.",
-            required: true
-        },
-        {
-            id: "linguagem_espiritos",
-            name: "Linguagem dos Espíritos",
-            description: "Os grunhidos, latidos, guinchos e chamados das criaturas selvagens são uma forma de linguagem para você. Você é capaz de compreender qualquer animal nativo da sua terra ou que seja similar a algum cuja essência tenha estudado.",
-            required: true
+            required: true            
         },
         {
             id: "metamorfose",
@@ -272,12 +272,16 @@ const CLASS_DRUIDA = {
             ]
         },
         {
-            id: "equilibrio",
-            name: "Equilíbrio",
-            trigger: "Quando causar dano",
-            description: "Quando causar dano, receba equilíbrio 1. Quando tocar alguém e canalizar os espíritos da vida, você poderá gastar equilíbrio. Para cada equilíbrio gasto, cure 1d4 PV.",
-            hasHoldSystem: true,
-            holdName: "equilíbrio"
+            id: "comunhao_sussurros",
+            name: "Comunhão dos Sussurros",
+            trigger: "Quando passar algum tempo em um local, observando seus espíritos residentes e convocando os espíritos de sua terra",
+            description: "Quando passar algum tempo em um local, observando seus espíritos residentes e convocando os espíritos de sua terra, role+SAB. Você receberá uma visão importante a respeito de si próprio, de seus aliados, e dos espíritos ao seu redor.",
+            attribute: "sab",
+            results: {
+                success: "A visão será clara e útil.",
+                partial: "A visão é pouco clara, e seu significado nebuloso.",
+                fail: "A visão é incômoda, aterrorizante ou traumatizante. O MJ irá descrevê-la. Receba -1 adiante."
+            }
         },
         {
             id: "olhos_tigre",
@@ -292,16 +296,12 @@ const CLASS_DRUIDA = {
             description: "Quando se metamorfosear, escolha uma habilidade: você recebe +1 constante em rolamentos que a utilizem enquanto mantiver a outra forma. O MJ também vai escolher uma habilidade, e você receberá -1 constante nela enquanto permanecer metamorfoseado."
         },
         {
-            id: "comunhao_sussurros",
-            name: "Comunhão dos Sussurros",
-            trigger: "Quando passar algum tempo em um local, observando seus espíritos residentes e convocando os espíritos de sua terra",
-            description: "Quando passar algum tempo em um local, observando seus espíritos residentes e convocando os espíritos de sua terra, role+SAB. Você receberá uma visão importante a respeito de si próprio, de seus aliados, e dos espíritos ao seu redor.",
-            attribute: "sab",
-            results: {
-                success: "A visão será clara e útil.",
-                partial: "A visão é pouco clara, e seu significado nebuloso.",
-                fail: "A visão é incômoda, aterrorizante ou traumatizante. O MJ irá descrevê-la. Receba -1 adiante."
-            }
+            id: "equilibrio",
+            name: "Equilíbrio",
+            trigger: "Quando causar dano",
+            description: "Quando causar dano, receba equilíbrio 1. Quando tocar alguém e canalizar os espíritos da vida, você poderá gastar equilíbrio. Para cada equilíbrio gasto, cure 1d4 PV.",
+            hasHoldSystem: true,
+            holdName: "equilíbrio"            
         },
         {
             id: "falar_coisas",
@@ -373,3 +373,4 @@ const CLASS_DRUIDA = {
 if (typeof window !== 'undefined') {
     window.CLASS_DRUIDA = CLASS_DRUIDA;
 }
+
