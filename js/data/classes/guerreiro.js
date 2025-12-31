@@ -239,6 +239,20 @@ const CLASS_GUERREIRO = {
     // MOVIMENTOS INICIAIS
     startingMoves: [
         {
+            id: "arma_favorita",
+            name: "Arma Favorita",
+            description: "Esta é sua arma. Existem muitas iguais a ela, mas esta é sua. Ela é sua melhor amiga. Ela é sua vida. Você a domina como domina a si próprio. Sua arma, sem você, é inútil. Sem sua arma, você é inútil. Empunhe-a e seja autêntico.",
+            hasSignatureWeaponBuilder: true,
+            signatureWeaponNote: "Configure sua arma favorita na seção dedicada abaixo.",
+            required: true            
+        },
+        {
+            id: "fortificado",
+            name: "Fortificado",
+            description: "Ignore o rótulo desengonçada em qualquer armadura que você vestir.",
+            required: true
+        },
+        {
             id: "dobrar_barras",
             name: "Dobrar Barras, Suspender Portais",
             trigger: "Quando usar força bruta para destruir um objeto inanimado",
@@ -254,20 +268,6 @@ const CLASS_GUERREIRO = {
                 "Não provoca uma barulheira absurda",
                 "Você pode consertar o objeto sem muito esforço"
             ],
-            required: true
-        },
-        {
-            id: "fortificado",
-            name: "Fortificado",
-            description: "Ignore o rótulo desengonçada em qualquer armadura que você vestir.",
-            required: true
-        },
-        {
-            id: "arma_favorita",
-            name: "Arma Favorita",
-            description: "Esta é sua arma. Existem muitas iguais a ela, mas esta é sua. Ela é sua melhor amiga. Ela é sua vida. Você a domina como domina a si próprio. Sua arma, sem você, é inútil. Sem sua arma, você é inútil. Empunhe-a e seja autêntico.",
-            hasSignatureWeaponBuilder: true,
-            signatureWeaponNote: "Configure sua arma favorita na seção dedicada abaixo.",
             required: true
         }
     ],
@@ -424,3 +424,4 @@ const CLASS_GUERREIRO = {
 if (typeof window !== 'undefined') {
     window.CLASS_GUERREIRO = CLASS_GUERREIRO;
 }
+
