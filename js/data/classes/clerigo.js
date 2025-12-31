@@ -192,10 +192,21 @@ const CLASS_CLERIGO = {
             required: true
         },
         {
-            id: "orientacao_divina",
-            name: "Orientação Divina",
-            trigger: "Quando fizer uma súplica adequada aos preceitos de sua religião",
-            description: "Quando fizer uma súplica adequada aos preceitos de sua religião, sua divindade lhe concederá algum conhecimento útil ou benefício relacionado aos seus domínios. O MJ lhe dirá qual.",
+            id: "conjurar_feiticos",
+            name: "Conjurar Feitiços",
+            trigger: "Quando conjurar um feitiço conferido a você por sua divindade",
+            description: "Quando conjurar um feitiço conferido a você por sua divindade, role+SAB.",
+            attribute: "sab",
+            results: {
+                success: "O feitiço é conjurado com sucesso e sua divindade não o revoga, logo, você poderá conjurá-lo novamente.",
+                partial: "O feitiço é conjurado, mas escolha um:"
+            },
+            partialOptions: [
+                "Você atrai atenção indesejada ou se coloca em evidência (o MJ descreverá como);",
+                "Sua conjuração lhe distancia de sua divindade – receba -1 constante em conjurar feitiços até a próxima vez que comungar novamente;",
+                "Após conjurar o feitiço, ele é revogado por sua divindade. Você não pode conjurá-lo novamente até comungar e recebê-lo novamente."
+            ],
+            note: "Repare que a manutenção de feitiços com efeitos contínuos poderá lhe causar penalidades em sua jogada de conjurar feitiços em alguns casos.",
             required: true
         },
         {
@@ -223,22 +234,11 @@ const CLASS_CLERIGO = {
             required: true
         },
         {
-            id: "conjurar_feiticos",
-            name: "Conjurar Feitiços",
-            trigger: "Quando conjurar um feitiço conferido a você por sua divindade",
-            description: "Quando conjurar um feitiço conferido a você por sua divindade, role+SAB.",
-            attribute: "sab",
-            results: {
-                success: "O feitiço é conjurado com sucesso e sua divindade não o revoga, logo, você poderá conjurá-lo novamente.",
-                partial: "O feitiço é conjurado, mas escolha um:"
-            },
-            partialOptions: [
-                "Você atrai atenção indesejada ou se coloca em evidência (o MJ descreverá como);",
-                "Sua conjuração lhe distancia de sua divindade – receba -1 constante em conjurar feitiços até a próxima vez que comungar novamente;",
-                "Após conjurar o feitiço, ele é revogado por sua divindade. Você não pode conjurá-lo novamente até comungar e recebê-lo novamente."
-            ],
-            note: "Repare que a manutenção de feitiços com efeitos contínuos poderá lhe causar penalidades em sua jogada de conjurar feitiços em alguns casos.",
-            required: true
+            id: "orientacao_divina",
+            name: "Orientação Divina",
+            trigger: "Quando fizer uma súplica adequada aos preceitos de sua religião",
+            description: "Quando fizer uma súplica adequada aos preceitos de sua religião, sua divindade lhe concederá algum conhecimento útil ou benefício relacionado aos seus domínios. O MJ lhe dirá qual.",
+            required: true            
         }
     ],
     
@@ -287,18 +287,18 @@ const CLASS_CLERIGO = {
             description: "Curar Ferimentos Leves é considerado uma oração para você, logo, não conta para o seu limite de feitiços concedidos."
         },
         {
+            id: "penitente",
+            name: "Penitente",
+            trigger: "Quando receber dano e abraçar a dor",
+            description: "Quando receber dano e abraçar a dor, você pode sofrer +1d4 de dano (ignorando armadura). Caso o faça, receba +1 adiante para conjurar feitiços."
+        },
+        {
             id: "prece_por_orientacao",
             name: "Prece por Orientação",
             trigger: "Quando sacrificar algo de valor para sua divindade e rezar pedindo por sua orientação",
             description: "Quando sacrificar algo de valor para sua divindade e rezar pedindo por sua orientação, sua divindade lhe dirá o que ela quer que você faça. Se você o fizer, marque experiência.",
             grantsXP: true,
-            xpTrigger: "Cumprir o que sua divindade quer que você faça"
-        },
-        {
-            id: "penitente",
-            name: "Penitente",
-            trigger: "Quando receber dano e abraçar a dor",
-            description: "Quando receber dano e abraçar a dor, você pode sofrer +1d4 de dano (ignorando armadura). Caso o faça, receba +1 adiante para conjurar feitiços."
+            xpTrigger: "Cumprir o que sua divindade quer que você faça"            
         },
         {
             id: "potencializar",
@@ -396,3 +396,4 @@ const CLASS_CLERIGO = {
 if (typeof window !== 'undefined') {
     window.CLASS_CLERIGO = CLASS_CLERIGO;
 }
+
