@@ -162,6 +162,18 @@ const CLASS_BARBARO = {
             ]
         },
         {
+            id: "musculoso",
+            name: "Musculoso",
+            description: "Quando portar uma arma, ela recebe os rótulos poderoso e grotesco.",
+            required: true
+        },
+        {
+            id: "controle_situacao",
+            name: "Controle da Situação",
+            description: "Você recebe +1 constante para seu último suspiro. Quando realizar o último suspiro, com 7-9 você pode fazer uma oferta para a Morte em troca de sua vida. Se a Morte aceitar, você viverá de novo. Caso contrário, você morre.",
+            required: true
+        },
+        {
             id: "apetite_herculeo",
             name: "Apetite Hercúleo",
             description: "Outras pessoas podem se contentar apenas com o gosto do vinho, o domínio sobre um servo ou ambos, mas você quer mais.",
@@ -175,18 +187,6 @@ const CLASS_BARBARO = {
                 "Fama e glória"
             ],
             appetiteEffect: "Enquanto estiver perseguindo um de seus apetites, se realizar algum movimento, no lugar de rolar 2d6 você rola 1d6+1d8. Se o d6 apresentar o maior resultado do par, o MJ também irá introduzir uma complicação ou perigo que surge a partir de sua busca implacável."
-        },
-        {
-            id: "controle_situacao",
-            name: "Controle da Situação",
-            description: "Você recebe +1 constante para seu último suspiro. Quando realizar o último suspiro, com 7-9 você pode fazer uma oferta para a Morte em troca de sua vida. Se a Morte aceitar, você viverá de novo. Caso contrário, você morre.",
-            required: true
-        },
-        {
-            id: "musculoso",
-            name: "Musculoso",
-            description: "Quando portar uma arma, ela recebe os rótulos poderoso e grotesco.",
-            required: true
         },
         {
             id: "o_que_voce_esta_esperando",
@@ -344,3 +344,4 @@ const CLASS_BARBARO = {
 if (typeof window !== 'undefined') {
     window.CLASS_BARBARO = CLASS_BARBARO;
 }
+
