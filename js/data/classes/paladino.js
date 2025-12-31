@@ -129,22 +129,19 @@ const CLASS_PALADINO = {
     // MOVIMENTOS INICIAIS
     startingMoves: [
         {
-            id: "impor_maos",
-            name: "Impor as Mãos",
-            trigger: "Quando tocar alguém, pele com pele, e rezar por seu bem estar",
-            description: "Quando tocar alguém, pele com pele, e rezar por seu bem estar, role+CAR.",
-            attribute: "car",
-            results: {
-                success: "Você cura 1d8 de dano ou remove uma doença.",
-                partial: "A cura acontece, mas o dano ou a doença é transferido para você."
-            },
-            required: true
-        },
-        {
             id: "fortificado",
             name: "Fortificado",
             description: "Ignore o rótulo \"desajeitada\" em qualquer armadura que você usar.",
-            required: true
+            required: true            
+        },
+        {
+            id: "busca",
+            name: "Busca",
+            trigger: "Quando você se dedicar a uma missão através da oração e da purificação espiritual",
+            description: "Quando você se dedicar a uma missão através da oração e da purificação espiritual, diga o que pretende fazer.",
+            hasQuestBuilder: true,
+            questBuilderNote: "Configure sua busca sagrada na seção dedicada abaixo.",
+            required: true            
         },
         {
             id: "eu_sou_a_lei",
@@ -165,12 +162,15 @@ const CLASS_PALADINO = {
             required: true
         },
         {
-            id: "busca",
-            name: "Busca",
-            trigger: "Quando você se dedicar a uma missão através da oração e da purificação espiritual",
-            description: "Quando você se dedicar a uma missão através da oração e da purificação espiritual, diga o que pretende fazer.",
-            hasQuestBuilder: true,
-            questBuilderNote: "Configure sua busca sagrada na seção dedicada abaixo.",
+            id: "impor_maos",
+            name: "Impor as Mãos",
+            trigger: "Quando tocar alguém, pele com pele, e rezar por seu bem estar",
+            description: "Quando tocar alguém, pele com pele, e rezar por seu bem estar, role+CAR.",
+            attribute: "car",
+            results: {
+                success: "Você cura 1d8 de dano ou remove uma doença.",
+                partial: "A cura acontece, mas o dano ou a doença é transferido para você."
+            },
             required: true
         }
     ],
@@ -310,3 +310,4 @@ const CLASS_PALADINO = {
 if (typeof window !== 'undefined') {
     window.CLASS_PALADINO = CLASS_PALADINO;
 }
+
