@@ -177,12 +177,6 @@ const CLASS_MAGO = {
             required: true
         },
         {
-            id: "defesa_magica",
-            name: "Defesa Mágica",
-            description: "Você pode desfazer um feitiço contínuo imediatamente, e utilizar a energia envolvida em sua dissipação para defletir um ataque. O feitiço é encerrado e você subtrai o nível dele do dano recebido.",
-            required: true
-        },
-        {
             id: "ritual",
             name: "Ritual",
             trigger: "Quando drenar energia de um local de poder para criar um efeito mágico",
@@ -198,6 +192,12 @@ const CLASS_MAGO = {
                 { text: "Você precisará desencantar ________________ para fazê-lo" }
             ],
             required: true
+        },
+        {
+            id: "defesa_magica",
+            name: "Defesa Mágica",
+            description: "Você pode desfazer um feitiço contínuo imediatamente, e utilizar a energia envolvida em sua dissipação para defletir um ataque. O feitiço é encerrado e você subtrai o nível dele do dano recebido.",
+            required: true            
         }
     ],
     
@@ -354,3 +354,4 @@ const CLASS_MAGO = {
 if (typeof window !== 'undefined') {
     window.CLASS_MAGO = CLASS_MAGO;
 }
+
