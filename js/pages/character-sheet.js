@@ -110,6 +110,7 @@ const CharacterSheetPage = {
      */
     renderNavigation() {
         const nav = document.querySelector('.sheet-nav');
+        const navWrapper = document.querySelector('.sheet-nav-wrapper');
         if (!nav) return;
         
         const character = Store.get('character');
@@ -140,6 +141,15 @@ const CharacterSheetPage = {
             </button>
         `).join('');
 
+        // Renderiza os dots de indicador de scroll
+        const scrollIndicator = document.querySelector('.nav-scroll-indicator');
+        if (scrollIndicator) {
+            scrollIndicator.innerHTML = sections.map((section, index) => `
+                <span class="nav-scroll-dot ${section.id === this.currentSection ? 'active' : ''}" 
+                      data-index="${index}"></span>
+            `).join('');
+        }
+
         // Eventos de navegação
         nav.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
@@ -147,6 +157,50 @@ const CharacterSheetPage = {
                 this.navigateToSection(section);
             });
         });
+
+        // Configura scroll indicators e eventos
+        this.setupNavScroll(nav, navWrapper, sections);
+    },
+
+    /**
+     * Configura o comportamento de scroll da navbar mobile
+     */
+    setupNavScroll(nav, navWrapper, sections) {
+        if (!nav || !navWrapper) return;
+
+        const updateScrollIndicators = () => {
+            const canScrollLeft = nav.scrollLeft > 10;
+            const canScrollRight = nav.scrollLeft < (nav.scrollWidth - nav.clientWidth - 10);
+            
+            navWrapper.classList.toggle('can-scroll-left', canScrollLeft);
+            navWrapper.classList.toggle('can-scroll-right', canScrollRight);
+            
+            // Atualiza dots baseado na posição de scroll
+            const scrollIndicator = document.querySelector('.nav-scroll-indicator');
+            if (scrollIndicator && sections.length > 0) {
+                const scrollPercentage = nav.scrollLeft / (nav.scrollWidth - nav.clientWidth);
+                const activeIndex = Math.round(scrollPercentage * (sections.length - 1));
+                
+                scrollIndicator.querySelectorAll('.nav-scroll-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === activeIndex);
+                });
+            }
+        };
+
+        // Eventos de scroll
+        nav.addEventListener('scroll', updateScrollIndicators, { passive: true });
+        
+        // Scroll inicial para o item ativo
+        setTimeout(() => {
+            const activeItem = nav.querySelector('.nav-item-active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+            updateScrollIndicators();
+        }, 100);
+
+        // Atualiza ao redimensionar
+        window.addEventListener('resize', updateScrollIndicators, { passive: true });
     },
 
     /**
@@ -158,11 +212,31 @@ const CharacterSheetPage = {
         Store.setSection(sectionId);
         
         // Atualiza navegação ativa
-        document.querySelectorAll('.nav-item').forEach(item => {
+        const nav = document.querySelector('.sheet-nav');
+        let activeIndex = 0;
+        
+        document.querySelectorAll('.nav-item').forEach((item, index) => {
             const isActive = item.getAttribute('data-section') === sectionId;
             item.classList.toggle('nav-item-active', isActive);
             item.setAttribute('aria-current', isActive ? 'page' : 'false');
+            if (isActive) activeIndex = index;
         });
+
+        // Scroll até o item ativo na navbar
+        if (nav) {
+            const activeItem = nav.querySelector('.nav-item-active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        }
+
+        // Atualiza dots do indicador
+        const scrollIndicator = document.querySelector('.nav-scroll-indicator');
+        if (scrollIndicator) {
+            scrollIndicator.querySelectorAll('.nav-scroll-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === activeIndex);
+            });
+        }
 
         // Renderiza a seção
         this.renderSection(sectionId);
