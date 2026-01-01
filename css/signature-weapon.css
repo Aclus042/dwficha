@@ -409,3 +409,25 @@
         padding: var(--space-2);
     }
 }
+
+/* Touch devices - Signature Weapon */
+@media (hover: none) and (pointer: coarse) {
+    .signature-weapon-builder .step-option {
+        touch-action: manipulation;
+        min-height: 44px;
+    }
+    
+    .signature-weapon-builder .step-option:active {
+        transform: scale(0.97);
+        opacity: 0.9;
+    }
+    
+    .signature-weapon-builder .enhancement-option {
+        touch-action: manipulation;
+    }
+    
+    .signature-weapon-builder .enhancement-option:active {
+        transform: scale(0.97);
+    }
+}
+

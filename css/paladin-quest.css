@@ -172,3 +172,38 @@
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 599px) {
+    .paladin-quest-builder {
+        padding: var(--space-4) var(--space-3);
+        margin: var(--space-4) 0;
+    }
+    
+    .paladin-quest-title {
+        font-size: var(--text-base);
+    }
+    
+    .mission-target-input, 
+    .gift-target-input {
+        font-size: 16px; /* Previne zoom no iOS */
+        min-height: 36px;
+        padding: var(--space-2);
+    }
+    
+    .paladin-quest-builder .step-option {
+        min-height: 44px;
+    }
+}
+
+/* Touch devices - Paladin Quest */
+@media (hover: none) and (pointer: coarse) {
+    .paladin-quest-builder .step-option {
+        touch-action: manipulation;
+    }
+    
+    .paladin-quest-builder .step-option:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+}
+

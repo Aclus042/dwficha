@@ -339,3 +339,64 @@
         line-clamp: 3;
     }
 }
+
+/* =====================================================
+   AJUSTES MOBILE - CLASS SELECTION
+   ===================================================== */
+
+@media (max-width: 599px) {
+    .page-header {
+        padding: var(--space-4) var(--space-3);
+    }
+    
+    .import-btn-corner {
+        top: var(--space-2);
+        right: var(--space-2);
+    }
+    
+    .import-btn-corner .btn {
+        width: 44px;
+        height: 44px;
+        padding: 0;
+    }
+    
+    /* Filtros de classe */
+    .class-filter-btn {
+        min-height: 40px;
+        padding: var(--space-2) var(--space-3);
+    }
+    
+    /* Cards de classe */
+    .class-card {
+        min-height: 80px;
+    }
+}
+
+/* Touch devices - Class Selection */
+@media (hover: none) and (pointer: coarse) {
+    .class-card {
+        touch-action: manipulation;
+    }
+    
+    .class-card:active {
+        transform: translateY(1px);
+        opacity: 0.95;
+    }
+    
+    .class-filter-btn {
+        touch-action: manipulation;
+    }
+    
+    .class-filter-btn:active {
+        transform: scale(0.97);
+    }
+    
+    .import-btn-corner .btn {
+        touch-action: manipulation;
+    }
+    
+    .import-btn-corner .btn:active {
+        transform: scale(0.95);
+    }
+}
+

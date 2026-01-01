@@ -1865,3 +1865,238 @@
     text-align: center;
     padding: var(--space-4);
 }
+/* =====================================================
+   AJUSTES MOBILE - Touch e Usabilidade
+   ===================================================== */
+
+/* Previne zoom em double-tap em todos os elementos interativos */
+button,
+input,
+select,
+textarea,
+.btn,
+.btn-icon,
+.btn-level-up,
+.card,
+.attribute-row,
+.vital-stat,
+.xp-controls,
+.nav-item,
+.accordion-header,
+.checkbox-option,
+.radio-option {
+    touch-action: manipulation;
+}
+
+/* Botões de incremento/decremento maiores no mobile */
+@media (max-width: 768px) {
+    .btn-icon {
+        width: 44px;
+        height: 44px;
+        font-size: var(--text-xl);
+        /* Área de toque mínima recomendada: 44x44px */
+    }
+    
+    .btn-icon:active {
+        transform: scale(0.95);
+        background: var(--color-blood);
+        border-color: var(--color-blood);
+        color: var(--color-parchment);
+    }
+    
+    /* Inputs maiores para facilitar toque */
+    .vital-current,
+    .xp-current {
+        font-size: var(--text-xl);
+        padding: var(--space-2);
+        min-height: 44px;
+    }
+    
+    .vital-current {
+        width: 55px;
+    }
+    
+    .xp-current {
+        width: 50px;
+    }
+    
+    /* Área de toque maior para controles de XP */
+    .xp-controls {
+        gap: var(--space-3);
+        padding: var(--space-2);
+    }
+    
+    /* Cards com mais espaçamento interno */
+    .card {
+        margin-bottom: var(--space-4);
+    }
+    
+    .card-title {
+        padding: var(--space-3) var(--space-4);
+        font-size: var(--text-base);
+    }
+    
+    /* Status vital mais compacto mas tocável */
+    .vital-stats-grid {
+        gap: var(--space-3);
+        padding: var(--space-4);
+    }
+    
+    .vital-stat {
+        padding: var(--space-3);
+    }
+    
+    .vital-label {
+        font-size: 10px;
+        margin-bottom: var(--space-2);
+    }
+    
+    /* Barra de HP mais grossa para visibilidade */
+    .vital-hp .hp-bar {
+        height: 10px;
+    }
+    
+    /* Seção de XP/Nível mais compacta */
+    .xp-level-section {
+        gap: var(--space-4);
+        padding: var(--space-4);
+    }
+    
+    .level-display {
+        padding: var(--space-3) var(--space-4);
+        min-width: 80px;
+    }
+    
+    .level-value {
+        font-size: var(--text-3xl);
+    }
+    
+    /* Botão de Level Up maior */
+    .btn-level-up {
+        min-height: 44px;
+        padding: var(--space-2) var(--space-4);
+    }
+}
+
+/* Mobile pequeno (< 480px) */
+@media (max-width: 480px) {
+    .btn-icon {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .vital-input-group {
+        gap: var(--space-1);
+    }
+    
+    .vital-current {
+        width: 50px;
+        font-size: var(--text-lg);
+    }
+    
+    .vital-max {
+        font-size: var(--text-base);
+    }
+    
+    .vital-separator {
+        font-size: var(--text-base);
+    }
+    
+    .xp-values {
+        gap: var(--space-1);
+    }
+    
+    .xp-current {
+        width: 45px;
+        font-size: var(--text-lg);
+        padding: var(--space-1);
+    }
+    
+    .xp-needed {
+        font-size: var(--text-base);
+    }
+    
+    /* Armor e Damage values menores */
+    .armor-value,
+    .damage-value {
+        font-size: var(--text-2xl);
+    }
+    
+    /* Navegação mais compacta */
+    .character-nav {
+        padding: var(--space-2);
+        gap: var(--space-1);
+    }
+    
+    .nav-item {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-xs);
+        min-height: 40px;
+    }
+    
+    /* Header do personagem */
+    .character-header {
+        padding: var(--space-3);
+    }
+    
+    .character-name {
+        font-size: var(--text-xl);
+    }
+    
+    .character-class {
+        font-size: var(--text-sm);
+    }
+    
+    /* Atributos mais compactos */
+    .attribute-row {
+        padding: var(--space-2) var(--space-3);
+        min-height: 44px;
+    }
+    
+    .attribute-name {
+        font-size: var(--text-sm);
+    }
+    
+    .attribute-score {
+        font-size: var(--text-lg);
+        width: 36px;
+        height: 36px;
+    }
+    
+    .attribute-mod {
+        font-size: var(--text-lg);
+        min-width: 36px;
+    }
+}
+
+/* Feedback visual para toque */
+@media (hover: none) and (pointer: coarse) {
+    /* Dispositivos touch */
+    .btn-icon:active,
+    .btn:active,
+    .btn-level-up:active,
+    .nav-item:active,
+    .accordion-header:active {
+        transform: scale(0.97);
+        opacity: 0.9;
+    }
+    
+    /* Remove hover effects que não funcionam bem em touch */
+    .vital-stat:hover {
+        border-color: var(--color-ink-light);
+        box-shadow: none;
+    }
+    
+    .btn-icon:hover {
+        background: var(--color-parchment-light);
+        border-color: var(--color-ink-light);
+        color: var(--color-ink-medium);
+    }
+    
+    /* Apenas aplica estilo de hover no :active */
+    .btn-icon:active {
+        background: var(--color-blood);
+        border-color: var(--color-blood);
+        color: var(--color-parchment);
+    }
+}

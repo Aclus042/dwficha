@@ -1214,3 +1214,109 @@
     color: #8B6914;
     margin-left: var(--space-2);
 }
+/* =====================================================
+   AJUSTES MOBILE ADICIONAIS - GRIMÓRIO
+   ===================================================== */
+
+@media (max-width: 599px) {
+    /* Grid de feitiços em coluna única */
+    .grimoire-spell-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+    
+    /* Card de feitiço mais compacto */
+    .grimoire-spell-card {
+        padding: var(--space-3);
+    }
+    
+    /* Checkbox maior para toque */
+    .grimoire-spell-checkbox,
+    .grimoire-active-checkbox {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        touch-action: manipulation;
+    }
+    
+    /* Labels mais visíveis */
+    .grimoire-checkbox-label {
+        font-size: var(--text-xs);
+        min-height: 24px;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Controles do feitiço */
+    .grimoire-spell-controls {
+        gap: var(--space-3);
+    }
+    
+    .grimoire-control-group {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Nome do feitiço */
+    .grimoire-spell-title {
+        font-size: var(--text-base);
+    }
+    
+    /* Descrição do feitiço */
+    .grimoire-spell-description {
+        font-size: var(--text-sm);
+        line-height: 1.5;
+    }
+    
+    /* Header de seção */
+    .grimoire-section-header {
+        min-height: 48px;
+        padding: var(--space-3);
+    }
+    
+    .grimoire-accordion-header {
+        touch-action: manipulation;
+    }
+    
+    /* Badges */
+    .grimoire-section-badge {
+        font-size: 10px;
+        padding: var(--space-1) var(--space-2);
+    }
+    
+    .grimoire-spell-badge {
+        font-size: 9px;
+    }
+    
+    /* Avisos de contínuos */
+    .grimoire-ongoing-warning {
+        padding: var(--space-3);
+    }
+    
+    /* Badge de bônus */
+    .grimoire-bonus-badge {
+        font-size: 10px;
+    }
+    
+    /* Info de bônus */
+    .grimoire-bonus-info {
+        font-size: var(--text-xs);
+        padding: var(--space-2);
+    }
+}
+
+/* Touch devices - Grimório */
+@media (hover: none) and (pointer: coarse) {
+    .grimoire-spell-card {
+        touch-action: manipulation;
+    }
+    
+    .grimoire-accordion-header:active {
+        background: rgba(0, 0, 0, 0.02);
+    }
+    
+    .grimoire-spell-card:active {
+        transform: scale(0.99);
+    }
+}

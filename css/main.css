@@ -585,3 +585,80 @@ body::after {
 .section-movimentos {
     padding: var(--space-6) 0;
 }
+
+/* =====================================================
+   AJUSTES GLOBAIS MOBILE
+   ===================================================== */
+
+/* Previne zoom em double-tap globalmente */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Elementos interativos base */
+button,
+input,
+select,
+textarea,
+a,
+label {
+    touch-action: manipulation;
+}
+
+/* Mobile geral */
+@media (max-width: 768px) {
+    /* Container principal com menos padding */
+    .container {
+        padding-left: var(--space-3);
+        padding-right: var(--space-3);
+    }
+    
+    /* Espaçamentos menores */
+    .section-personagem,
+    .section-dados,
+    .section-inventario,
+    .section-movimentos {
+        padding: var(--space-4) 0;
+    }
+}
+
+/* Mobile pequeno */
+@media (max-width: 480px) {
+    .container {
+        padding-left: var(--space-2);
+        padding-right: var(--space-2);
+    }
+    
+    /* Tipografia menor */
+    body {
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: var(--text-2xl);
+    }
+    
+    h2 {
+        font-size: var(--text-xl);
+    }
+    
+    h3 {
+        font-size: var(--text-lg);
+    }
+}
+
+/* Dispositivos touch - feedback visual */
+@media (hover: none) and (pointer: coarse) {
+    /* Garante que botões tenham área de toque mínima */
+    button,
+    .btn,
+    [role="button"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Links em lista precisam de mais espaço */
+    a {
+        padding: var(--space-1);
+    }
+}

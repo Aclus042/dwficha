@@ -448,3 +448,25 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* Touch devices - Animal Companion */
+@media (hover: none) and (pointer: coarse) {
+    .animal-companion-builder .step-option {
+        touch-action: manipulation;
+        min-height: 44px;
+    }
+    
+    .animal-companion-builder .step-option:active {
+        transform: scale(0.97);
+        opacity: 0.9;
+    }
+    
+    .species-option {
+        touch-action: manipulation;
+    }
+    
+    .species-option:active {
+        transform: scale(0.95);
+    }
+}
+
