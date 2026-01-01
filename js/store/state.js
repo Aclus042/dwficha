@@ -363,7 +363,10 @@ const Store = {
         acquiredMoves.forEach(moveId => {
             const move = allMoves.find(m => m.id === moveId);
             if (move && move.armorBonus) {
-                bonus += move.armorBonus;
+                // Verifica se há condição para o bônus de armadura
+                if (this.checkArmorCondition(char, move.armorCondition)) {
+                    bonus += move.armorBonus;
+                }
             }
         });
         
@@ -379,12 +382,52 @@ const Store = {
                 ];
                 const move = sourceMoves.find(m => m.id === mcMove.moveId);
                 if (move && move.armorBonus) {
-                    bonus += move.armorBonus;
+                    // Verifica se há condição para o bônus de armadura
+                    if (this.checkArmorCondition(char, move.armorCondition)) {
+                        bonus += move.armorBonus;
+                    }
                 }
             }
         });
         
         return bonus;
+    },
+    
+    /**
+     * Verifica se a condição para bônus de armadura é atendida
+     * @param {Object} char - Dados do personagem
+     * @param {string} condition - Tipo de condição (undefined = sempre aplica)
+     * @returns {boolean} - Se a condição é atendida
+     */
+    checkArmorCondition(char, condition) {
+        // Se não há condição, sempre aplica
+        if (!condition) {
+            return true;
+        }
+        
+        const inventory = char.inventory || [];
+        
+        switch (condition) {
+            case 'noArmorOrShield':
+                // Proteção Divina (Clérigo): só aplica se não estiver usando armadura ou escudo
+                const hasArmorEquipped = inventory.some(item => 
+                    item.equipped && 
+                    (item.type === 'armor' || item.tags?.includes('armadura'))
+                );
+                const hasShieldEquipped = inventory.some(item => 
+                    item.equipped && 
+                    (item.type === 'shield' || item.tags?.includes('escudo') || 
+                     item.name?.toLowerCase().includes('escudo'))
+                );
+                return !hasArmorEquipped && !hasShieldEquipped;
+            
+            case 'onQuest':
+                // Proteção Divina (Paladino): só aplica se estiver em uma busca
+                return char.activeQuest && char.activeQuest.active === true;
+            
+            default:
+                return true;
+        }
     },
     
     /**

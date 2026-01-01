@@ -1159,6 +1159,28 @@ const MovementCard = {
             fragment.appendChild(startingSection);
         }
         
+        // === SISTEMAS ESPECIAIS (parte dos movimentos iniciais) ===
+        
+        // Sistema de Arma Favorita (Guerreiro)
+        if (classData.signatureWeapon && typeof SignatureWeapon !== 'undefined') {
+            const weaponBuilder = SignatureWeapon.render(classData.signatureWeapon);
+            fragment.appendChild(weaponBuilder);
+        }
+        
+        // Sistema de Companheiro Animal (Ranger)
+        if (classData.animalCompanion && typeof AnimalCompanion !== 'undefined') {
+            const companionBuilder = AnimalCompanion.render(classData.animalCompanion);
+            fragment.appendChild(companionBuilder);
+        }
+        
+        // Sistema de Busca Sagrada (Paladino)
+        if (classData.quest && typeof PaladinQuest !== 'undefined') {
+            const questBuilder = PaladinQuest.render(classData.quest);
+            fragment.appendChild(questBuilder);
+        }
+        
+        // === FIM DOS SISTEMAS ESPECIAIS ===
+        
         // Seção de Movimentos Avançados Adquiridos
         const allAdvancedMoves = [
             ...(classData.advancedMoves2_5 || []),
@@ -1185,24 +1207,6 @@ const MovementCard = {
         if (multiclassMoves.length > 0) {
             const multiclassSection = this.renderMulticlassMovesSection(multiclassMoves);
             fragment.appendChild(multiclassSection);
-        }
-        
-        // Sistema de Arma Favorita (Guerreiro)
-        if (classData.signatureWeapon && typeof SignatureWeapon !== 'undefined') {
-            const weaponBuilder = SignatureWeapon.render(classData.signatureWeapon);
-            fragment.appendChild(weaponBuilder);
-        }
-        
-        // Sistema de Companheiro Animal (Ranger)
-        if (classData.animalCompanion && typeof AnimalCompanion !== 'undefined') {
-            const companionBuilder = AnimalCompanion.render(classData.animalCompanion);
-            fragment.appendChild(companionBuilder);
-        }
-        
-        // Sistema de Busca Sagrada (Paladino)
-        if (classData.quest && typeof PaladinQuest !== 'undefined') {
-            const questBuilder = PaladinQuest.render(classData.quest);
-            fragment.appendChild(questBuilder);
         }
 
         // Movimentos avançados (níveis 2-5)
@@ -1289,6 +1293,23 @@ const MovementCard = {
                 return;
             }
             
+            // Verifica se é um movimento que concede slot de feitiço bônus (Prodígio, Mestre, O Escolhido, Abençoado)
+            const bonusSpellMoves = ['prodigio', 'mestre', 'escolhido', 'abencoado'];
+            if (bonusSpellMoves.includes(moveId)) {
+                // Calcula o próximo círculo de feitiço acima do nível atual
+                const level = character.level || 1;
+                let nextCircle = 3;
+                if (level >= 3) nextCircle = 5;
+                if (level >= 5) nextCircle = 7;
+                if (level >= 7) nextCircle = 9;
+                if (level >= 9) nextCircle = 0; // Não há círculo acima
+                
+                // Salva o círculo de bônus no personagem
+                const bonusCircles = { ...(character.bonusSpellCircles || {}) };
+                bonusCircles[moveId] = nextCircle;
+                Store.setCharacterProperty('bonusSpellCircles', bonusCircles);
+            }
+            
             // Verifica se é um movimento que concede poderes de clérigo (Favor Divino / Deuses em Meio à Desolação)
             if (moveData && moveData.grantsClericSpells) {
                 // Salva o nível em que adquiriu a habilidade
@@ -1355,11 +1376,21 @@ const MovementCard = {
                 Store.setCharacterProperty('multiclassMoves', updatedMulticlass);
             }
             
-            // Se desmarcar Grimório Expandido, remove o feitiço expandido
+            // Se desmarcar Grimório Expandido, remove o feitiço expandido e seus preparados
             const expandedSpells = character.expandedSpells || [];
             const updatedExpanded = expandedSpells.filter(s => s.grantedBy !== moveId);
             if (updatedExpanded.length !== expandedSpells.length) {
                 Store.setCharacterProperty('expandedSpells', updatedExpanded);
+                
+                // Remove também os feitiços expandidos preparados que foram removidos
+                const removedSpellIds = expandedSpells
+                    .filter(s => s.grantedBy === moveId)
+                    .map(s => s.spellId);
+                const expandedPreparedSpells = character.expandedPreparedSpells || [];
+                const updatedExpandedPrepared = expandedPreparedSpells.filter(id => !removedSpellIds.includes(id));
+                if (updatedExpandedPrepared.length !== expandedPreparedSpells.length) {
+                    Store.setCharacterProperty('expandedPreparedSpells', updatedExpandedPrepared);
+                }
             }
             
             // Se desmarcar movimento que concede poderes de clérigo, remove tudo relacionado
@@ -1372,6 +1403,30 @@ const MovementCard = {
                 // Atualiza a navegação para esconder o Grimório
                 if (typeof CharacterSheetPage !== 'undefined') {
                     CharacterSheetPage.renderNavigation();
+                }
+            }
+            
+            // Se desmarcar movimento que concede slot de bônus de magia, remove o círculo salvo
+            const bonusSpellMoves = ['prodigio', 'mestre', 'escolhido', 'abencoado'];
+            if (bonusSpellMoves.includes(moveId)) {
+                const bonusCircles = { ...(character.bonusSpellCircles || {}) };
+                const circleToRemove = bonusCircles[moveId];
+                delete bonusCircles[moveId];
+                Store.setCharacterProperty('bonusSpellCircles', bonusCircles);
+                
+                // Remove também o feitiço de bônus que estava preparado nesse círculo
+                if (circleToRemove) {
+                    const bonusPrepared = character.bonusPreparedSpells || [];
+                    // Filtrar feitiços de bônus que pertencem a esse círculo
+                    const spellData = character.className === 'Mago' ? 
+                        (window.MagoSpells || []) : (window.ClerigoSpells || []);
+                    const updatedBonusPrepared = bonusPrepared.filter(spellId => {
+                        const spell = spellData.find(s => s.id === spellId);
+                        return !spell || spell.level !== circleToRemove;
+                    });
+                    if (updatedBonusPrepared.length !== bonusPrepared.length) {
+                        Store.setCharacterProperty('bonusPreparedSpells', updatedBonusPrepared);
+                    }
                 }
             }
         }

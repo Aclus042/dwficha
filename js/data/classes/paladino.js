@@ -255,7 +255,9 @@ const CLASS_PALADINO = {
             id: "protecao_divina",
             name: "Proteção Divina",
             replaces: "Proteção Sagrada",
-            description: "Você recebe armadura +2 enquanto estiver em uma busca."
+            description: "Você recebe armadura +2 enquanto estiver em uma busca.",
+            armorBonus: 2,
+            armorCondition: "onQuest"
         },
         {
             id: "cavaleiro_perfeito",

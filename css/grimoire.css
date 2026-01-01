@@ -115,6 +115,55 @@
     border-bottom: 2px solid var(--color-ink-light);
 }
 
+/* === SISTEMA DE ACCORDION === */
+.grimoire-accordion-header {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin: calc(-1 * var(--space-6));
+    margin-bottom: 0;
+    padding: var(--space-4) var(--space-6);
+    border-bottom: none;
+    border-radius: var(--radius-lg);
+}
+
+.grimoire-accordion-header:hover {
+    background: rgba(139, 69, 19, 0.05);
+}
+
+.grimoire-accordion-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.grimoire-accordion-icon {
+    font-size: var(--text-sm);
+    color: var(--color-ink-medium);
+    transition: transform 0.2s ease;
+    width: 1em;
+    text-align: center;
+}
+
+.grimoire-accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
+    padding: 0 var(--space-6);
+}
+
+.grimoire-accordion-open .grimoire-accordion-header {
+    border-bottom: 2px solid var(--color-ink-light);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin-bottom: var(--space-5);
+}
+
+.grimoire-accordion-open .grimoire-accordion-content {
+    max-height: 5000px;
+    opacity: 1;
+    padding: 0;
+}
+
 .grimoire-section-title {
     font-family: var(--font-display);
     font-size: var(--text-xl);
@@ -1087,4 +1136,81 @@
         height: 24px;
         font-size: 10px;
     }
+}
+
+/* =====================================================
+   SEÇÃO DESBLOQUEADA POR BÔNUS (Prodígio, O Escolhido, etc.)
+   ===================================================== */
+
+.grimoire-section-bonus-unlocked {
+    border: 2px solid var(--color-gold, #b8860b) !important;
+    box-shadow: 0 0 10px rgba(184, 134, 11, 0.2);
+}
+
+.grimoire-section-bonus-unlocked .grimoire-section-header {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.15) 0%, rgba(184, 134, 11, 0.05) 100%);
+}
+
+.grimoire-section-badge-bonus {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.3) 0%, rgba(184, 134, 11, 0.15) 100%);
+    color: #8B6914;
+    border: 1px solid rgba(184, 134, 11, 0.5);
+}
+
+.grimoire-spell-card.bonus-spell {
+    border-color: var(--color-gold, #b8860b);
+    box-shadow: 0 0 8px rgba(184, 134, 11, 0.3);
+}
+
+.grimoire-spell-card.bonus-spell.prepared {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, rgba(184, 134, 11, 0.05) 100%);
+}
+
+.grimoire-bonus-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.2) 0%, rgba(184, 134, 11, 0.1) 100%);
+    border: 1px solid var(--color-gold, #b8860b);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: #8B6914;
+    margin-bottom: var(--space-2);
+    width: 100%;
+}
+
+.grimoire-bonus-badge .bonus-icon {
+    font-size: var(--text-sm);
+}
+
+.grimoire-bonus-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.15) 0%, rgba(184, 134, 11, 0.05) 100%);
+    border: 1px solid rgba(184, 134, 11, 0.3);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+    font-size: var(--text-sm);
+    color: #8B6914;
+}
+
+.grimoire-bonus-info .bonus-icon {
+    font-size: var(--text-lg);
+}
+
+.grimoire-limit-bonus {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-2);
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.2) 0%, rgba(184, 134, 11, 0.1) 100%);
+    border: 1px solid rgba(184, 134, 11, 0.5);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    color: #8B6914;
+    margin-left: var(--space-2);
 }

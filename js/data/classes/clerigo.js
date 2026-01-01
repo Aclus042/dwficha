@@ -29,8 +29,8 @@ const CLASS_CLERIGO = {
             id: "humano",
             name: "Humano",
             description: "Sua fé é distinta. Escolha um feitiço de mago: você pode recebê-lo e conjurá-lo como se fosse um feitiço de clérigo.",
-            requiresSpellChoice: true,
-            spellChoiceSource: "mago"
+            allowsSpellFromOtherClass: true,
+            spellSource: "mago"
         }
     ],
     
@@ -247,9 +247,7 @@ const CLASS_CLERIGO = {
         {
             id: "escolhido",
             name: "O Escolhido",
-            description: "Escolha um feitiço. Ele lhe é concedido como se fosse 1 nível menor.",
-            requiresSpellChoice: true,
-            spellChoiceKey: "chosenSpell"
+            description: "Você pode receber um feitiço de um círculo acima do seu nível atual."
         },
         {
             id: "revigorar",
@@ -261,7 +259,9 @@ const CLASS_CLERIGO = {
             id: "protecao_divina",
             name: "Proteção Divina",
             trigger: "Quando não estiver usando armadura ou escudo",
-            description: "Quando não estiver usando armadura ou escudo, receba armadura 2."
+            description: "Quando não estiver usando armadura ou escudo, receba armadura 2.",
+            armorBonus: 2,
+            armorCondition: "noArmorOrShield"
         },
         {
             id: "serenidade",
@@ -337,9 +337,7 @@ const CLASS_CLERIGO = {
             id: "abencoado",
             name: "Abençoado",
             requires: "O Escolhido",
-            description: "Escolha um feitiço diferente daquele já selecionado anteriormente. Ele lhe é concedido como se fosse 1 nível menor.",
-            requiresSpellChoice: true,
-            spellChoiceKey: "blessedSpell"
+            description: "Você pode receber um feitiço adicional de um círculo acima do seu nível atual (requer O Escolhido)."
         },
         {
             id: "primeiros_socorros_superiores",

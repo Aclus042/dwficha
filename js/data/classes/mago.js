@@ -213,9 +213,7 @@ const CLASS_MAGO = {
         {
             id: "prodigio",
             name: "Prodígio",
-            description: "Escolha um feitiço. Você o prepara como se fosse 1 nível menor.",
-            requiresSpellChoice: true,
-            spellChoiceKey: "prodigySpell"
+            description: "Você pode preparar um feitiço de um círculo acima do seu nível atual."
         },
         {
             id: "fonte_conhecimento",
@@ -288,9 +286,7 @@ const CLASS_MAGO = {
             id: "mestre",
             name: "Mestre",
             requires: "Prodígio",
-            description: "Escolha um feitiço além daquele selecionado com prodígio. Você o prepara como se fosse 1 nível menor.",
-            requiresSpellChoice: true,
-            spellChoiceKey: "masterSpell"
+            description: "Você pode preparar um feitiço adicional de um círculo acima do seu nível atual (requer Prodígio)."
         },
         {
             id: "ampliacao_magica",
