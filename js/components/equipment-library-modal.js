@@ -152,7 +152,7 @@ const EquipmentLibraryModal = {
                     </div>
                     
                     <div class="library-item-tags">
-                        ${item.tags.map(tag => `<span class="library-tag">${tag}</span>`).join('')}
+                        ${item.tags.map(tag => `<span class="library-tag ${this.getTagClass(tag)}">${tag}</span>`).join('')}
                     </div>
                     
                     <div class="library-item-stats">
@@ -383,6 +383,70 @@ const EquipmentLibraryModal = {
             modal.classList.remove('active');
             setTimeout(() => modal.remove(), 300);
         }
+    },
+
+    /**
+     * Classifica uma tag para aplicar estilo apropriado
+     */
+    getTagClass(tag) {
+        const tagLower = tag.toLowerCase();
+        
+        // Tags de dano: +x dano, +x de dano
+        if (tagLower.match(/^\+\d+\s*(de\s*)?dano/)) {
+            return 'tag-damage';
+        }
+        
+        // Tags de penetração: penetrante x, x penetrante
+        if (tagLower.includes('penetrante')) {
+            return 'tag-piercing';
+        }
+        
+        // Tags de combate corpo a corpo
+        if (tagLower.includes('corpo a corpo') || tagLower === 'mão') {
+            return 'tag-melee';
+        }
+        
+        // Tags de alcance/distância
+        if (['perto', 'próximo', 'longe', 'distante', 'alcance', 'arremesso'].some(t => tagLower.includes(t))) {
+            return 'tag-range';
+        }
+        
+        // Tags de munição
+        if (tagLower.includes('munição')) {
+            return 'tag-ammo';
+        }
+        
+        // Tags de usos
+        if (tagLower.match(/\d+\s*uso/)) {
+            return 'tag-uses';
+        }
+        
+        // Tags de precisão
+        if (tagLower.includes('preciso') || tagLower.includes('precisa')) {
+            return 'tag-precise';
+        }
+        
+        // Tags de duas mãos
+        if (tagLower.includes('duas mãos') || tagLower.includes('2 mãos')) {
+            return 'tag-twohands';
+        }
+        
+        // Tags de recarga
+        if (tagLower.includes('recarga')) {
+            return 'tag-reload';
+        }
+        
+        // Tags de armadura (vestida, desengonçada, etc.)
+        if (tagLower.includes('vestida') || tagLower.includes('desengonçada')) {
+            return 'tag-armor-mod';
+        }
+        
+        // Tags de armadura numeradas
+        if (tagLower.match(/^armadura\s*\+?\d/)) {
+            return 'tag-armor';
+        }
+        
+        return '';
     }
 };
 

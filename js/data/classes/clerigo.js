@@ -153,7 +153,7 @@ const CLASS_CLERIGO = {
                     {
                         id: "aventureiro_racoes",
                         items: [
-                            { name: "Equipamento de aventureiro", weight: 1, tags: ["peso 1"] },
+                            { name: "Equipamento de aventureiro", weight: 1, uses: 5, tags: ["5 usos", "peso 1"] },
                             { name: "Rações de masmorra", weight: 1, tags: ["5 usos", "peso 1"] }
                         ]
                     },

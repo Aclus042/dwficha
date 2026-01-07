@@ -83,6 +83,9 @@ const CharacterSheetPage = {
             </div>
             
             <div class="sheet-header-actions">
+                <button type="button" class="btn btn-help" title="Referência de Movimentos">
+                    ?
+                </button>
                 <button type="button" class="btn btn-secondary btn-small export-character">
                     📥 Exportar
                 </button>
@@ -94,6 +97,7 @@ const CharacterSheetPage = {
 
         // Eventos do cabeçalho
         const nameInput = header.querySelector('.sheet-name-input');
+        const helpBtn = header.querySelector('.btn-help');
         const exportBtn = header.querySelector('.export-character');
         const backBtn = header.querySelector('.back-to-selection');
 
@@ -101,6 +105,7 @@ const CharacterSheetPage = {
             Store.setCharacterProperty('name', nameInput.value);
         });
 
+        helpBtn.addEventListener('click', () => this.navigateToSection('referencia'));
         exportBtn.addEventListener('click', () => this.exportCharacter());
         backBtn.addEventListener('click', () => this.confirmBack());
     },
@@ -271,6 +276,9 @@ const CharacterSheetPage = {
                 break;
             case 'grimorio':
                 this.renderGrimorioSection(content);
+                break;
+            case 'referencia':
+                this.renderReferenciaSection(content);
                 break;
         }
     },
@@ -859,25 +867,23 @@ const CharacterSheetPage = {
                     </div>
                 </div>
                 
-                ${hasStartingEquipment ? `
+                ${hasStartingEquipment && !equipmentChosen ? `
                 <!-- Equipamento Inicial -->
                 <div class="card">
                     <div class="card-header-with-action">
                         <h3 class="card-title">Equipamento Inicial</h3>
                         <button type="button" class="btn-edit-modal" id="btn-edit-equipment">
                             <span class="btn-edit-modal-icon">🎒</span>
-                            ${equipmentChosen ? 'Editar Equipamento' : 'Selecionar Equipamento'}
+                            Selecionar Equipamento
                         </button>
                     </div>
                     
-                    ${!equipmentChosen && !hasInventoryItems ? `
-                        <div class="attributes-not-set">
-                            <div class="attributes-not-set-icon">🎒</div>
-                            <p class="attributes-not-set-text">
-                                Clique em "Selecionar Equipamento" para escolher seu equipamento inicial.
-                            </p>
-                        </div>
-                    ` : ''}
+                    <div class="attributes-not-set">
+                        <div class="attributes-not-set-icon">🎒</div>
+                        <p class="attributes-not-set-text">
+                            Clique em "Selecionar Equipamento" para escolher seu equipamento inicial.
+                        </p>
+                    </div>
                 </div>
                 ` : ''}
                 
@@ -1432,6 +1438,112 @@ const CharacterSheetPage = {
         if (container) {
             this.renderPersonagemSection(container);
         }
+    },
+
+    /**
+     * Renderiza a seção de Referência de Movimentos
+     * @param {HTMLElement} container - Container da seção
+     */
+    renderReferenciaSection(container) {
+        container.innerHTML = `
+            <div class="section-referencia">
+                <!-- Movimentos Básicos -->
+                <div class="movement-section">
+                    <div class="movement-section-header">
+                        <h3 class="movement-section-title">⚔️ Movimentos Básicos</h3>
+                        <div class="movement-section-info">
+                            <span class="movement-section-count">${BasicMovesPage.basicMoves.length} movimentos</span>
+                        </div>
+                    </div>
+                    <div class="movement-grid">
+                        ${BasicMovesPage.basicMoves.map(move => this.renderRefMoveCard(move)).join('')}
+                    </div>
+                </div>
+
+                <!-- Movimentos Especiais -->
+                <div class="movement-section">
+                    <div class="movement-section-header">
+                        <h3 class="movement-section-title">✨ Movimentos Especiais</h3>
+                        <div class="movement-section-info">
+                            <span class="movement-section-count">${BasicMovesPage.specialMoves.length} movimentos</span>
+                        </div>
+                    </div>
+                    <div class="movement-grid">
+                        ${BasicMovesPage.specialMoves.map(move => this.renderRefMoveCard(move)).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    /**
+     * Renderiza um card de movimento para a referência
+     * @param {Object} move - Dados do movimento
+     * @returns {string} - HTML do card
+     */
+    renderRefMoveCard(move) {
+        return `
+            <div class="movement-card">
+                <div class="movement-header">
+                    <h4 class="movement-name">${move.name}</h4>
+                    ${move.roll ? `<span class="movement-attribute">${move.roll.replace('role+', '+')}</span>` : ''}
+                </div>
+                
+                <p class="movement-trigger">${move.trigger}</p>
+                
+                ${move.rollOptions ? `
+                    <ul class="movement-roll-options">
+                        ${move.rollOptions.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+                ` : ''}
+                
+                ${move.description ? `<p class="movement-description">${move.description.replace(/\n/g, '<br>')}</p>` : ''}
+                
+                ${move.hit || move.partial || move.miss ? `
+                    <div class="movement-results">
+                        ${move.hit ? `
+                            <div class="movement-result movement-result-success">
+                                <span class="result-label">10+</span>
+                                <span class="result-text">${move.hit}</span>
+                            </div>
+                        ` : ''}
+                        ${move.hitOptions ? `
+                            <div class="movement-result movement-result-success">
+                                <span class="result-label">10+</span>
+                                <ul class="result-options">
+                                    ${move.hitOptions.map(opt => `<li>${opt}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        ${move.partial ? `
+                            <div class="movement-result movement-result-partial">
+                                <span class="result-label">7-9</span>
+                                <span class="result-text">${move.partial}</span>
+                            </div>
+                        ` : ''}
+                        ${move.partialOptions ? `
+                            <ul class="movement-partial-options">
+                                ${move.partialOptions.map(opt => `<li>${opt}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        ${move.miss ? `
+                            <div class="movement-result movement-result-fail">
+                                <span class="result-label">6-</span>
+                                <span class="result-text">${move.miss}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
+                
+                ${move.options ? `
+                    <ul class="movement-options-list">
+                        ${move.options.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+                ` : ''}
+                
+                ${move.footer ? `<p class="movement-footer">${move.footer}</p>` : ''}
+            </div>
+        `;
     },
 
     /**

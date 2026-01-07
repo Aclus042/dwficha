@@ -122,7 +122,7 @@ const Helpers = {
      * @returns {string} - HTML formatado
      */
     formatMovementText(text) {
-        if (!text) return '';
+        if (!text || typeof text !== 'string') return '';
         
         // Substitui quebras de linha
         let formatted = text.replace(/\n/g, '<br>');

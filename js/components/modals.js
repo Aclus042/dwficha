@@ -476,6 +476,8 @@ const AttributesModal = {
 const EquipmentModal = {
     // Estado atual das escolhas
     choices: {},
+    // Nomes editados dos itens fixos
+    editedNames: {},
 
     /**
      * Abre o modal de equipamentos
@@ -491,6 +493,7 @@ const EquipmentModal = {
 
         // Inicializa com escolhas existentes
         this.choices = { ...(character.equipmentChoices || {}) };
+        this.editedNames = { ...(character.editedEquipmentNames || {}) };
         
         const content = this.generateContent(classData);
         
@@ -529,11 +532,21 @@ const EquipmentModal = {
                         <span class="equipment-section-title">Você Recebe Automaticamente</span>
                     </div>
                     <div class="fixed-items-list">
-                        ${equipment.fixed.map(item => `
+                        ${equipment.fixed.map((item, index) => `
                             <div class="fixed-item">
                                 <span class="fixed-item-check">✓</span>
                                 <div class="fixed-item-info">
-                                    <span class="fixed-item-name">${item.name}</span>
+                                    ${item.editableName ? `
+                                        <input type="text" 
+                                               class="fixed-item-name-input" 
+                                               data-fixed-index="${index}"
+                                               placeholder="${item.placeholder || item.name}"
+                                               value="${this.editedNames[index] || ''}"
+                                               maxlength="100">
+                                        <span class="fixed-item-hint">${item.name}</span>
+                                    ` : `
+                                        <span class="fixed-item-name">${item.name}</span>
+                                    `}
                                     ${item.tags && item.tags.length > 0 ? `
                                         <span class="fixed-item-tags">${item.tags.join(', ')}</span>
                                     ` : ''}
@@ -659,6 +672,14 @@ const EquipmentModal = {
     attachEvents(classData) {
         const overlay = document.getElementById('modal-equipment');
         if (!overlay) return;
+
+        // Event listeners para nomes editáveis
+        overlay.querySelectorAll('.fixed-item-name-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const index = e.target.dataset.fixedIndex;
+                this.editedNames[index] = e.target.value;
+            });
+        });
 
         overlay.querySelectorAll('.choice-option-card').forEach(card => {
             card.addEventListener('click', () => {
@@ -806,15 +827,22 @@ const EquipmentModal = {
 
         // Adiciona itens fixos
         if (equipment.fixed) {
-            equipment.fixed.forEach(item => {
+            equipment.fixed.forEach((item, index) => {
+                // Usa o nome editado se existir, senão usa o nome original
+                const finalName = item.editableName && this.editedNames[index] 
+                    ? this.editedNames[index] 
+                    : item.name;
+                    
                 inventory.push({
                     id: Helpers.generateId(),
-                    name: item.name,
+                    name: finalName,
                     weight: item.weight || 0,
                     tags: item.tags || [],
                     armor: item.armor || 0,
                     equipped: false,
-                    isSignatureWeapon: item.isSignatureWeapon || false
+                    isSignatureWeapon: item.isSignatureWeapon || false,
+                    uses: item.uses,
+                    isStartingEquipment: true
                 });
             });
         }
@@ -846,7 +874,9 @@ const EquipmentModal = {
                                     weight: item.weight || 0,
                                     tags: item.tags || [],
                                     armor: item.armor || 0,
-                                    equipped: false
+                                    equipped: false,
+                                    isStartingEquipment: true,
+                                    uses: item.uses
                                 });
                             }
                         });

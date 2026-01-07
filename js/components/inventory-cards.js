@@ -29,7 +29,7 @@ const InventoryCards = {
         }
 
         // Arma
-        if (item.damage || tags.some(t => 
+        if (tags.some(t => 
             t.includes('dano') || t.includes('mão') || t.includes('corpo a corpo') || 
             t.includes('alcance') || t.includes('próximo') || t.includes('perto') || 
             t.includes('longe') || t.includes('penetrante') || t.includes('precisa')
@@ -97,9 +97,10 @@ const InventoryCards = {
         const isDepleted = item.maxUses > 0 && item.currentUses === 0;
         const isEquipped = item.equipped;
         const canEquip = itemType === 'weapon' || itemType === 'armor';
+        const isStartingEquipment = item.isStartingEquipment || false;
 
         const card = document.createElement('div');
-        card.className = `item-card ${isDepleted ? 'depleted' : ''} ${isEquipped ? 'equipped' : ''}`;
+        card.className = `item-card ${isDepleted ? 'depleted' : ''} ${isEquipped ? 'equipped' : ''} ${isStartingEquipment ? 'starting-equipment' : ''}`;
         card.dataset.itemId = item.id;
         card.dataset.itemType = itemType;
 
@@ -118,9 +119,6 @@ const InventoryCards = {
         let statsHtml = '';
         if (item.armor > 0) {
             statsHtml += `<span class="item-stat-inline stat-armor">🛡${item.armor}</span>`;
-        }
-        if (item.damage) {
-            statsHtml += `<span class="item-stat-inline stat-damage">⚔${item.damage}</span>`;
         }
 
         // Info secundária
@@ -153,7 +151,7 @@ const InventoryCards = {
             <!-- Tooltip com tags do item -->
             ${itemTags ? `<div class="item-tags-tooltip">${itemTags}</div>` : ''}
             
-            ${showDelete ? `<button type="button" class="btn-delete" title="Remover">✕</button>` : ''}
+            ${showDelete && !isStartingEquipment ? `<button type="button" class="btn-delete" title="Remover">✕</button>` : ''}
             
             ${isDepleted ? `
                 <div class="item-depleted-overlay">
@@ -506,42 +504,14 @@ const InventoryCards = {
                     </div>
                 </div>
                 
-                ${item.tags && item.tags.length > 0 ? `
+                ${this.renderDetailTags(item) ? `
                     <div class="item-detail-section">
                         <h4>Rótulos</h4>
                         <div class="item-detail-tags">
-                            ${item.tags.map(t => `<span class="item-detail-tag">${this.escapeHtml(t)}</span>`).join('')}
+                            ${this.renderDetailTags(item)}
                         </div>
                     </div>
                 ` : ''}
-                
-                <div class="item-detail-section">
-                    <h4>Estatísticas</h4>
-                    <div class="item-detail-stats">
-                        <div class="item-detail-stat">
-                            <span class="item-detail-stat-value">${item.weight || 0}</span>
-                            <span class="item-detail-stat-label">Peso</span>
-                        </div>
-                        ${item.armor !== undefined ? `
-                            <div class="item-detail-stat">
-                                <span class="item-detail-stat-value">${item.armor}</span>
-                                <span class="item-detail-stat-label">Armadura</span>
-                            </div>
-                        ` : ''}
-                        ${item.damage ? `
-                            <div class="item-detail-stat">
-                                <span class="item-detail-stat-value">${item.damage}</span>
-                                <span class="item-detail-stat-label">Dano</span>
-                            </div>
-                        ` : ''}
-                        ${item.quantity > 1 ? `
-                            <div class="item-detail-stat">
-                                <span class="item-detail-stat-value">${item.quantity}</span>
-                                <span class="item-detail-stat-label">Qtd</span>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
                 
                 ${item.maxUses > 0 ? `
                     <div class="item-detail-section">
@@ -565,9 +535,13 @@ const InventoryCards = {
                             ${item.equipped ? '🛡️ Desequipar' : '○ Equipar'}
                         </button>
                     ` : ''}
-                    <button type="button" class="btn btn-ghost btn-detail-delete">
-                        ✕ Remover
-                    </button>
+                    ${!item.isStartingEquipment ? `
+                        <button type="button" class="btn btn-ghost btn-detail-delete">
+                            ✕ Remover
+                        </button>
+                    ` : `
+                        <span class="starting-equipment-badge">📦 Equipamento Inicial</span>
+                    `}
                 </div>
             </div>
         `;
@@ -642,6 +616,107 @@ const InventoryCards = {
             html += `<div class="use-dot ${isAvailable ? 'available' : 'used'}" data-dot-index="${i}"></div>`;
         }
         return html;
+    },
+
+    /**
+     * Renderiza todos os rótulos do item (incluindo peso, armadura, dano, etc.)
+     */
+    renderDetailTags(item) {
+        const allTags = [];
+        
+        // Adiciona peso como rótulo
+        if (item.weight > 0) {
+            allTags.push({ text: `peso ${item.weight}`, type: 'stat' });
+        }
+        
+        // Adiciona armadura como rótulo
+        if (item.armor > 0) {
+            allTags.push({ text: `armadura ${item.armor}`, type: 'stat-armor' });
+        }
+        
+        // Adiciona quantidade como rótulo
+        if (item.quantity > 1) {
+            allTags.push({ text: `qtd ${item.quantity}`, type: 'stat' });
+        }
+        
+        // Adiciona tags normais do item com classificação
+        if (item.tags && item.tags.length > 0) {
+            item.tags.forEach(tag => {
+                const tagLower = tag.toLowerCase();
+                
+                // Evita duplicar informações de peso e armadura que já estão nas stats
+                if (tagLower.startsWith('peso ') || tagLower.startsWith('armadura ')) {
+                    return;
+                }
+                
+                // Classifica o tipo da tag
+                const tagType = this.classifyTag(tagLower);
+                allTags.push({ text: tag, type: tagType });
+            });
+        }
+        
+        if (allTags.length === 0) return '';
+        
+        return allTags.map(tag => 
+            `<span class="item-detail-tag tag-${tag.type}">${this.escapeHtml(tag.text)}</span>`
+        ).join('');
+    },
+
+    /**
+     * Classifica uma tag para aplicar estilo apropriado
+     */
+    classifyTag(tagLower) {
+        // Tags de dano: +x dano, +x de dano, dano d6, etc.
+        if (tagLower.match(/^\+\d+\s*(de\s*)?dano/) || tagLower.match(/dano\s*d\d+/) || tagLower.match(/^d\d+/)) {
+            return 'stat-damage';
+        }
+        
+        // Tags de penetração: penetrante x, x penetrante
+        if (tagLower.includes('penetrante')) {
+            return 'stat-piercing';
+        }
+        
+        // Tags de combate corpo a corpo
+        if (tagLower.includes('corpo a corpo') || tagLower === 'mão') {
+            return 'stat-melee';
+        }
+        
+        // Tags de alcance/distância
+        if (['perto', 'próximo', 'longe', 'distante', 'alcance', 'arremesso'].some(t => tagLower.includes(t))) {
+            return 'stat-range';
+        }
+        
+        // Tags de munição
+        if (tagLower.includes('munição')) {
+            return 'stat-ammo';
+        }
+        
+        // Tags de usos
+        if (tagLower.match(/\d+\s*uso/)) {
+            return 'stat-uses';
+        }
+        
+        // Tags de precisão
+        if (tagLower.includes('preciso') || tagLower.includes('precisa')) {
+            return 'stat-precise';
+        }
+        
+        // Tags de duas mãos
+        if (tagLower.includes('duas mãos') || tagLower.includes('2 mãos')) {
+            return 'stat-twohands';
+        }
+        
+        // Tags de recarga
+        if (tagLower.includes('recarga')) {
+            return 'stat-reload';
+        }
+        
+        // Tags de armadura (vestida, desengoçada, etc.)
+        if (tagLower.includes('vestida') || tagLower.includes('desengoçada')) {
+            return 'stat-armor-mod';
+        }
+        
+        return 'normal';
     },
 
     /**

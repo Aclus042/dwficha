@@ -1,0 +1,36 @@
+/**
+ * =====================================================
+ * DUNGEON WORLD - SEÇÃO DE REFERÊNCIA
+ * Estilos para a referência de movimentos do sistema
+ * =====================================================
+ */
+
+/* === BOTÃO DE AJUDA (?) === */
+.btn-help {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: var(--color-parchment);
+    border: 2px solid var(--color-sepia);
+    border-radius: var(--radius-sm);
+    color: var(--color-sepia);
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-help:hover {
+    background: var(--color-sepia);
+    color: var(--color-parchment);
+}
+
+/* === SEÇÃO DE REFERÊNCIA === */
+.section-referencia {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}

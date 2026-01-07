@@ -725,34 +725,51 @@ const MovementCard = {
         const container = document.createElement('div');
         container.className = 'movement-results';
 
+        // Suporta ambos os formatos: string direta ou objeto {value, text}
+        const getResultText = (result) => {
+            if (!result) return '';
+            if (typeof result === 'string') return result;
+            if (typeof result === 'object' && result.text) return result.text;
+            return '';
+        };
+
         if (results.success) {
-            const success = document.createElement('div');
-            success.className = 'movement-result movement-result-success';
-            success.innerHTML = `
-                <span class="result-label">10+</span>
-                <span class="result-text">${Helpers.formatMovementText(results.success)}</span>
-            `;
-            container.appendChild(success);
+            const successText = getResultText(results.success);
+            if (successText) {
+                const success = document.createElement('div');
+                success.className = 'movement-result movement-result-success';
+                success.innerHTML = `
+                    <span class="result-label">10+</span>
+                    <span class="result-text">${Helpers.formatMovementText(successText)}</span>
+                `;
+                container.appendChild(success);
+            }
         }
 
         if (results.partial) {
-            const partial = document.createElement('div');
-            partial.className = 'movement-result movement-result-partial';
-            partial.innerHTML = `
-                <span class="result-label">7-9</span>
-                <span class="result-text">${Helpers.formatMovementText(results.partial)}</span>
-            `;
-            container.appendChild(partial);
+            const partialText = getResultText(results.partial);
+            if (partialText) {
+                const partial = document.createElement('div');
+                partial.className = 'movement-result movement-result-partial';
+                partial.innerHTML = `
+                    <span class="result-label">7-9</span>
+                    <span class="result-text">${Helpers.formatMovementText(partialText)}</span>
+                `;
+                container.appendChild(partial);
+            }
         }
 
         if (results.fail) {
-            const fail = document.createElement('div');
-            fail.className = 'movement-result movement-result-fail';
-            fail.innerHTML = `
-                <span class="result-label">6-</span>
-                <span class="result-text">${Helpers.formatMovementText(results.fail)}</span>
-            `;
-            container.appendChild(fail);
+            const failText = getResultText(results.fail);
+            if (failText) {
+                const fail = document.createElement('div');
+                fail.className = 'movement-result movement-result-fail';
+                fail.innerHTML = `
+                    <span class="result-label">6-</span>
+                    <span class="result-text">${Helpers.formatMovementText(failText)}</span>
+                `;
+                container.appendChild(fail);
+            }
         }
 
         return container;

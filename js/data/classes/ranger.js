@@ -122,14 +122,14 @@ const CLASS_RANGER = {
                     {
                         id: "equipamento_racoes",
                         items: [
-                            { name: "Equipamento de aventureiro", weight: 1, tags: ["peso 1"] },
+                            { name: "Equipamento de aventureiro", weight: 1, uses: 5, tags: ["5 usos", "peso 1"] },
                             { name: "Rações de masmorra", weight: 1, tags: ["peso 1"] }
                         ]
                     },
                     {
                         id: "equipamento_flechas",
                         items: [
-                            { name: "Equipamento de aventureiro", weight: 1, tags: ["peso 1"] },
+                            { name: "Equipamento de aventureiro", weight: 1, uses: 5, tags: ["5 usos", "peso 1"] },
                             { name: "Fardo de flechas", weight: 1, tags: ["munição 3", "peso 1"] }
                         ]
                     }

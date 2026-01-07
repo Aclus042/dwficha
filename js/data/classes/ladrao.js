@@ -146,7 +146,7 @@ const CLASS_LADRAO = {
                     {
                         id: "equipamento_aventureiro",
                         items: [
-                            { name: "Equipamento de aventureiro", weight: 1, tags: ["peso 1"] }
+                            { name: "Equipamento de aventureiro", weight: 1, uses: 5, tags: ["5 usos", "peso 1"] }
                         ]
                     },
                     {

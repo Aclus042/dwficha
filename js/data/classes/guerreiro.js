@@ -188,7 +188,7 @@ const CLASS_GUERREIRO = {
                         id: "cota_equipamento",
                         items: [
                             { name: "Cota de malha", weight: 1, armor: 1, tags: ["armadura 1", "peso 1"] },
-                            { name: "Equipamento de aventureiro", weight: 1, tags: ["peso 1"] }
+                            { name: "Equipamento de aventureiro", weight: 1, uses: 5, tags: ["5 usos", "peso 1"] }
                         ]
                     },
                     {

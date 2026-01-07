@@ -24,7 +24,7 @@ const CLASS_BARBARO = {
         {
             id: "forasteiro",
             name: "Forasteiro",
-            description: "Você pode ser um elfo, anão, halfling ou humano, mas seu povo não é dessas redondezas.",
+            description: "Você pode ser um elfo, anão, halfling ou humano, mas seu povo não é dessas redondezas. No início de cada sessão, o MJ lhe perguntará algo a respeito de sua terra natal, por que você foi embora ou o que deixou para trás. Se responder, marque XP.",
             isBackground: true,
             required: true,
             grantsXP: true
@@ -71,7 +71,7 @@ const CLASS_BARBARO = {
         fixed: [
             { name: "Rações de masmorra", weight: 1, tags: ["5 usos", "peso 1"] },
             { name: "Uma adaga", weight: 1, tags: ["mão", "peso 1"] },
-            { name: "Alguma lembrança de sua jornada ou de sua terra natal", weight: 0, tags: [] }
+            { name: "Alguma lembrança de sua jornada ou de sua terra natal", weight: 0, tags: [], editableName: true, placeholder: "Descreva sua lembrança..." }
         ],
         choices: [
             {
@@ -99,7 +99,7 @@ const CLASS_BARBARO = {
                     {
                         id: "equipamento_racoes",
                         items: [
-                            { name: "Equipamento de aventureiro", weight: 1, tags: ["peso 1"] },
+                            { name: "Equipamento de aventureiro", weight: 1, uses: 5, tags: ["5 usos", "peso 1"] },
                             { name: "Rações de masmorra", weight: 1, tags: ["5 usos", "peso 1"] }
                         ]
                     },

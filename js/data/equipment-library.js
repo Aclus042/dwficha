@@ -17,7 +17,6 @@ const EquipmentLibrary = {
             tags: ['próximo'],
             price: 15,
             weight: 2,
-            damage: 'd6',
             description: 'Um arco simples, funcional para curtas distâncias.'
         },
         {
@@ -27,7 +26,6 @@ const EquipmentLibrary = {
             tags: ['próximo', 'distante'],
             price: 60,
             weight: 2,
-            damage: 'd6',
             description: 'Um arco bem trabalhado, eficaz em longas distâncias.'
         },
         {
@@ -37,7 +35,6 @@ const EquipmentLibrary = {
             tags: ['próximo', 'distante'],
             price: 100,
             weight: 1,
-            damage: 'd6',
             description: 'Arco leve e preciso, favorito dos caçadores experientes.'
         },
         {
@@ -47,8 +44,6 @@ const EquipmentLibrary = {
             tags: ['próximo', '+1 de dano', 'recarga'],
             price: 35,
             weight: 3,
-            damage: 'd6',
-            bonusDamage: 1,
             description: 'Arma poderosa que requer tempo para recarregar.'
         },
         {
@@ -78,7 +73,6 @@ const EquipmentLibrary = {
             tags: ['corpo a corpo'],
             price: 1,
             weight: 2,
-            damage: 'd6',
             description: 'Arma primitiva mas eficaz.'
         },
         {
@@ -88,7 +82,6 @@ const EquipmentLibrary = {
             tags: ['corpo a corpo', 'duas mãos'],
             price: 1,
             weight: 1,
-            damage: 'd6',
             description: 'Bastão versátil, útil tanto para magia quanto combate.'
         },
         {
@@ -98,7 +91,6 @@ const EquipmentLibrary = {
             tags: ['mão'],
             price: 2,
             weight: 1,
-            damage: 'd6',
             description: 'Lâmina curta e discreta.'
         },
         {
@@ -108,7 +100,6 @@ const EquipmentLibrary = {
             tags: ['arremesso', 'próximo'],
             price: 1,
             weight: 0,
-            damage: 'd6',
             description: 'Lâmina balanceada para arremesso.'
         },
         {
@@ -118,7 +109,6 @@ const EquipmentLibrary = {
             tags: ['corpo a corpo'],
             price: 8,
             weight: 1,
-            damage: 'd6',
             description: 'Armas corpo a corpo básicas e confiáveis.'
         },
         {
@@ -128,7 +118,6 @@ const EquipmentLibrary = {
             tags: ['alcance', 'arremesso', 'próximo'],
             price: 5,
             weight: 1,
-            damage: 'd6',
             description: 'Arma versátil, boa para manter distância ou arremessar.'
         },
         {
@@ -138,8 +127,6 @@ const EquipmentLibrary = {
             tags: ['corpo a corpo', '+1 de dano'],
             price: 15,
             weight: 2,
-            damage: 'd6',
-            bonusDamage: 1,
             description: 'Armas de combate pesadas e poderosas.'
         },
         {
@@ -149,8 +136,6 @@ const EquipmentLibrary = {
             tags: ['alcance', '+1 de dano', 'duas mãos'],
             price: 9,
             weight: 2,
-            damage: 'd6',
-            bonusDamage: 1,
             description: 'Arma de haste com lâmina, excelente alcance.'
         },
         {
@@ -160,7 +145,6 @@ const EquipmentLibrary = {
             tags: ['corpo a corpo', 'preciso'],
             price: 25,
             weight: 1,
-            damage: 'd6',
             description: 'Lâmina fina e ágil para espadachins habilidosos.'
         },
         {
@@ -170,8 +154,6 @@ const EquipmentLibrary = {
             tags: ['corpo a corpo', '1 penetrante', 'preciso'],
             price: 50,
             weight: 2,
-            damage: 'd6',
-            piercing: 1,
             description: 'Florete de qualidade superior, ignora parte da armadura.'
         }
     ],

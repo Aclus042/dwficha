@@ -88,6 +88,12 @@ const Router = {
         const hash = window.location.hash.slice(1);
         
         if (hash && this.pages[hash]) {
+            // Páginas que não precisam de personagem
+            if (hash === 'class-selection') {
+                Store.set({ currentPage: hash });
+                return;
+            }
+            
             // Verifica se pode navegar para a ficha (precisa ter personagem)
             if (hash === 'character-sheet' && !Store.get('character')) {
                 // Tenta carregar do storage
