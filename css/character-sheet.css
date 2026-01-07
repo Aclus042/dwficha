@@ -26,7 +26,10 @@
     gap: var(--space-3);
     margin-bottom: var(--space-6);
     padding-bottom: var(--space-4);
-    border-bottom: 2px solid var(--color-ink-light);
+    border-bottom: 2px solid var(--color-sepia);
+    background: linear-gradient(to right, transparent 0%, rgba(122, 92, 40, 0.03) 50%, transparent 100%);
+    padding: var(--space-4);
+    border-radius: var(--radius-sm);
 }
 
 .sheet-back-btn {
@@ -73,9 +76,10 @@
     position: sticky;
     top: 0;
     z-index: var(--z-sticky);
-    background: var(--color-parchment);
-    border-bottom: 2px solid var(--color-ink-light);
+    background: linear-gradient(to bottom, var(--color-parchment) 0%, var(--color-parchment-light) 100%);
+    border-bottom: 2px solid var(--color-sepia);
     margin-bottom: var(--space-6);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* Oculta scroll hint em desktop */
@@ -129,7 +133,8 @@
 .nav-item-active {
     color: var(--color-blood);
     border-bottom-color: var(--color-blood);
-    background: var(--color-parchment-light);
+    background: linear-gradient(to bottom, var(--color-parchment-light) 0%, var(--color-parchment) 100%);
+    font-weight: var(--font-bold);
 }
 
 .nav-icon {
@@ -302,8 +307,9 @@
     color: var(--color-blood);
     padding: var(--space-4) var(--space-5);
     margin: 0;
-    background: var(--color-parchment);
+    background: linear-gradient(to right, var(--color-parchment) 0%, rgba(139, 46, 46, 0.03) 50%, var(--color-parchment) 100%);
     border-bottom: 1px solid var(--color-ink-light);
+    letter-spacing: 0.02em;
 }
 
 /* Card header com botão de ação */

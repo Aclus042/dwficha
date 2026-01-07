@@ -10,10 +10,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     padding: 0;
-    background: var(--color-parchment);
+    background: linear-gradient(135deg, var(--color-parchment) 0%, var(--color-parchment-light) 100%);
     border: 2px solid var(--color-sepia);
     border-radius: var(--radius-sm);
     color: var(--color-sepia);
@@ -21,16 +21,94 @@
     font-weight: var(--font-bold);
     cursor: pointer;
     transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .btn-help:hover {
-    background: var(--color-sepia);
+    background: linear-gradient(135deg, var(--color-sepia) 0%, var(--color-sepia-dark) 100%);
     color: var(--color-parchment);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(122, 92, 40, 0.3);
 }
 
 /* === SEÇÃO DE REFERÊNCIA === */
 .section-referencia {
     display: flex;
     flex-direction: column;
+    gap: var(--space-8);
+    padding-bottom: var(--space-8);
+}
+
+/* Título da seção de referência */
+.section-referencia .referencia-section-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--color-blood);
+    text-align: center;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 2px solid var(--color-blood);
+    position: relative;
+}
+
+.section-referencia .referencia-section-title::after {
+    content: '⚔';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-parchment);
+    padding: 0 var(--space-3);
+    font-size: var(--text-lg);
+}
+
+/* Grid de movimentos na referência */
+.section-referencia .referencia-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--space-5);
 }
+
+@media (min-width: 768px) {
+    .section-referencia .referencia-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Cards de referência */
+.section-referencia .referencia-card {
+    background: var(--color-parchment-light);
+    border: 1px solid var(--color-ink-light);
+    border-left: 4px solid var(--color-sepia);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    transition: all 0.2s ease;
+}
+
+.section-referencia .referencia-card:hover {
+    border-color: var(--color-sepia);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.section-referencia .referencia-card-name {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+    margin-bottom: var(--space-2);
+}
+
+.section-referencia .referencia-card-trigger {
+    font-style: italic;
+    color: var(--color-sepia-dark);
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-3);
+    border-left: 2px solid var(--color-sepia);
+}
+
+.section-referencia .referencia-card-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);

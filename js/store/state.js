@@ -359,10 +359,23 @@ const Store = {
             ...(classData.advancedMoves6_10 || [])
         ];
         
+        // Primeiro, identifica quais movimentos são substituídos por outros movimentos adquiridos
+        const replacedMoveNames = new Set();
+        acquiredMoves.forEach(moveId => {
+            const move = allMoves.find(m => m.id === moveId);
+            if (move && move.replaces) {
+                replacedMoveNames.add(move.replaces);
+            }
+        });
+        
         // Verifica movimentos adquiridos que dão bônus de armadura
         acquiredMoves.forEach(moveId => {
             const move = allMoves.find(m => m.id === moveId);
             if (move && move.armorBonus) {
+                // Se este movimento foi substituído por outro, não conta seu bônus
+                if (replacedMoveNames.has(move.name)) {
+                    return; // Pula este movimento
+                }
                 // Verifica se há condição para o bônus de armadura
                 if (this.checkArmorCondition(char, move.armorCondition)) {
                     bonus += move.armorBonus;
@@ -372,6 +385,24 @@ const Store = {
         
         // Verifica também movimentos de multiclasse
         const multiclassMoves = char.multiclassMoves || [];
+        
+        // Identifica substituições em movimentos de multiclasse
+        const mcReplacedMoveNames = new Set();
+        multiclassMoves.forEach(mcMove => {
+            const sourceClass = getClassById(mcMove.fromClass);
+            if (sourceClass) {
+                const sourceMoves = [
+                    ...(sourceClass.startingMoves || []),
+                    ...(sourceClass.advancedMoves2_5 || []),
+                    ...(sourceClass.advancedMoves6_10 || [])
+                ];
+                const move = sourceMoves.find(m => m.id === mcMove.moveId);
+                if (move && move.replaces) {
+                    mcReplacedMoveNames.add(move.replaces);
+                }
+            }
+        });
+        
         multiclassMoves.forEach(mcMove => {
             const sourceClass = getClassById(mcMove.fromClass);
             if (sourceClass) {
@@ -382,6 +413,10 @@ const Store = {
                 ];
                 const move = sourceMoves.find(m => m.id === mcMove.moveId);
                 if (move && move.armorBonus) {
+                    // Se este movimento foi substituído por outro, não conta seu bônus
+                    if (mcReplacedMoveNames.has(move.name)) {
+                        return; // Pula este movimento
+                    }
                     // Verifica se há condição para o bônus de armadura
                     if (this.checkArmorCondition(char, move.armorCondition)) {
                         bonus += move.armorBonus;

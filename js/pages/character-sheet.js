@@ -1036,67 +1036,17 @@ const CharacterSheetPage = {
 
         container.innerHTML = `
             <div class="section-movimentos">
-                <div class="movements-tabs">
-                    <button type="button" class="movement-tab movement-tab-active" data-tab="classe">
-                        Movimentos da Classe
-                    </button>
-                    <button type="button" class="movement-tab" data-tab="basicos">
-                        Movimentos Básicos
-                    </button>
-                    <button type="button" class="movement-tab" data-tab="especiais">
-                        Movimentos Especiais
-                    </button>
-                </div>
-                <div class="movements-content"></div>
+                <div class="movements-class-only"></div>
             </div>
         `;
 
-        // Eventos das tabs
-        container.querySelectorAll('.movement-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                container.querySelectorAll('.movement-tab').forEach(t => 
-                    t.classList.remove('movement-tab-active')
-                );
-                tab.classList.add('movement-tab-active');
-                this.renderMovementsTab(tab.getAttribute('data-tab'));
-            });
-        });
-
-        // Renderiza tab inicial
-        this.renderMovementsTab('classe');
-    },
-
-    /**
-     * Renderiza uma tab de movimentos
-     * @param {string} tabId - ID da tab
-     */
-    renderMovementsTab(tabId) {
-        const content = document.querySelector('.movements-content');
-        if (!content) return;
-
-        content.innerHTML = '';
-
-        const character = Store.get('character');
-
-        switch (tabId) {
-            case 'classe':
-                const classMoves = MovementCard.renderClassMoves(
-                    character.classId,
-                    character.acquiredMoves || []
-                );
-                content.appendChild(classMoves);
-                break;
-
-            case 'basicos':
-                const basicMoves = MovementCard.renderBasicMoves();
-                content.appendChild(basicMoves);
-                break;
-
-            case 'especiais':
-                const specialMoves = MovementCard.renderSpecialMoves();
-                content.appendChild(specialMoves);
-                break;
-        }
+        // Renderiza apenas os movimentos da classe
+        const classSection = container.querySelector('.movements-class-only');
+        const classMoves = MovementCard.renderClassMoves(
+            character.classId,
+            character.acquiredMoves || []
+        );
+        classSection.appendChild(classMoves);
     },
 
     /**

@@ -17,12 +17,13 @@
     letter-spacing: 0.08em;
     border: 2px solid var(--color-ink);
     border-radius: var(--radius-sm);
-    background: var(--color-parchment);
+    background: linear-gradient(to bottom, var(--color-parchment-light) 0%, var(--color-parchment) 100%);
     color: var(--color-ink);
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all 0.2s ease;
     position: relative;
     min-height: 48px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* Efeito de relevo sutil */
@@ -46,9 +47,10 @@
 }
 
 .btn--primary {
-    background: var(--color-blood);
+    background: linear-gradient(135deg, var(--color-blood) 0%, var(--color-blood-dark) 100%);
     color: var(--color-parchment-lightest);
     border-color: var(--color-blood-dark);
+    box-shadow: 0 2px 4px rgba(139, 46, 46, 0.2);
 }
 
 .btn--primary::before {
@@ -56,8 +58,10 @@
 }
 
 .btn--primary:hover {
-    background: var(--color-blood-dark);
+    background: linear-gradient(135deg, var(--color-blood-dark) 0%, var(--color-blood) 100%);
     color: var(--color-parchment-lightest);
+    box-shadow: 0 4px 8px rgba(139, 46, 46, 0.3);
+    transform: translateY(-1px);
 }
 
 .btn--secondary {
@@ -130,6 +134,7 @@
     outline: none;
     border-color: var(--color-sepia);
     background: white;
+    box-shadow: 0 0 0 3px rgba(122, 92, 40, 0.1);
 }
 
 .input-field::placeholder {
@@ -197,6 +202,7 @@
     outline: none;
     border-color: var(--color-sepia);
     background-color: white;
+    box-shadow: 0 0 0 3px rgba(122, 92, 40, 0.1);
 }
 
 .select-field option {
@@ -213,20 +219,6 @@
     background: var(--color-parchment-lightest);
     border: 1px solid var(--color-ink-light);
     border-radius: var(--radius-sm);
-    color: var(--color-ink);
-    font-family: var(--font-body);
-    font-size: var(--text-base);
-    line-height: 1.7;
-    resize: vertical;
-    transition: all var(--transition-fast);
-}
-
-.textarea-field:focus {
-    outline: none;
-    border-color: var(--color-sepia);
-    background: white;
-};
-    border: 1px solid var(--color-ink-light);
     color: var(--color-ink);
     font-family: var(--font-body);
     font-size: var(--text-base);

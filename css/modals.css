@@ -53,9 +53,9 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--space-4) var(--space-5);
-    background: var(--color-ink);
+    background: linear-gradient(135deg, var(--color-ink) 0%, var(--color-ink-dark) 100%);
     color: var(--color-parchment);
-    border-bottom: 2px solid var(--color-sepia);
+    border-bottom: 3px solid var(--color-sepia);
 }
 
 .modal-title {
@@ -127,8 +127,8 @@
     justify-content: flex-end;
     gap: var(--space-3);
     padding: var(--space-4) var(--space-5);
-    background: var(--color-parchment-dark);
-    border-top: 2px solid var(--color-ink-light);
+    background: linear-gradient(to top, var(--color-parchment-dark) 0%, var(--color-parchment) 100%);
+    border-top: 2px solid var(--color-sepia);
 }
 
 .modal-btn {
