@@ -108,6 +108,12 @@ const CharacterSheetPage = {
         helpBtn.addEventListener('click', () => this.navigateToSection('referencia'));
         exportBtn.addEventListener('click', () => this.exportCharacter());
         backBtn.addEventListener('click', () => this.confirmBack());
+
+        // Inicializa o sistema de avatar
+        const badge = header.querySelector('.sheet-class-badge');
+        if (badge && typeof CharacterAvatar !== 'undefined') {
+            CharacterAvatar.init(badge);
+        }
     },
 
     /**

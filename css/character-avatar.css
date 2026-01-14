@@ -1,0 +1,356 @@
+/**
+ * =====================================================
+ * DUNGEON WORLD - AVATAR DO PERSONAGEM
+ * Estilos para upload e edição de foto do personagem
+ * =====================================================
+ */
+
+/* === BADGE COM AVATAR === */
+.sheet-class-badge {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.sheet-class-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.sheet-class-badge.has-avatar {
+    background: transparent;
+}
+
+.sheet-class-badge .avatar-image {
+    position: absolute;
+    /* Não define width/height - usa tamanho natural da imagem */
+    max-width: none;
+    max-height: none;
+    border-radius: 0; /* O container já tem border-radius e overflow:hidden */
+}
+
+.sheet-class-badge .avatar-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: var(--text-xs);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.sheet-class-badge:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.avatar-overlay-icon {
+    font-size: 1.2rem;
+}
+
+/* === MODAL DE EDIÇÃO DE AVATAR === */
+.avatar-editor-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: var(--space-4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.avatar-editor-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.avatar-editor-container {
+    background: var(--color-parchment);
+    border: 3px solid var(--color-ink);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    width: 100%;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.avatar-editor-overlay.active .avatar-editor-container {
+    transform: scale(1);
+}
+
+.avatar-editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-ink);
+    color: var(--color-parchment);
+    border-bottom: 3px solid var(--color-sepia);
+}
+
+.avatar-editor-title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    margin: 0;
+}
+
+.avatar-editor-close {
+    background: transparent;
+    border: none;
+    color: var(--color-parchment);
+    font-size: var(--text-xl);
+    cursor: pointer;
+    padding: var(--space-2);
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.avatar-editor-close:hover {
+    opacity: 1;
+}
+
+.avatar-editor-body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+}
+
+/* === ÁREA DE UPLOAD === */
+.avatar-upload-zone {
+    width: 200px;
+    height: 200px;
+    border: 3px dashed var(--color-ink-light);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--color-parchment-light);
+    text-align: center;
+    padding: var(--space-4);
+}
+
+.avatar-upload-zone:hover {
+    border-color: var(--color-sepia);
+    background: var(--color-parchment);
+}
+
+.avatar-upload-zone.dragover {
+    border-color: var(--color-blood);
+    background: rgba(139, 46, 46, 0.05);
+}
+
+.avatar-upload-icon {
+    font-size: 2.5rem;
+    color: var(--color-ink-faded);
+}
+
+.avatar-upload-text {
+    font-size: var(--text-sm);
+    color: var(--color-ink-medium);
+}
+
+.avatar-upload-hint {
+    font-size: var(--text-xs);
+    color: var(--color-ink-faded);
+}
+
+.avatar-upload-input {
+    display: none;
+}
+
+/* === ÁREA DE EDIÇÃO === */
+.avatar-crop-area {
+    width: 200px;
+    height: 200px;
+    border: 3px solid var(--color-sepia);
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+    background: var(--color-ink-lightest);
+}
+
+.avatar-crop-area:active {
+    cursor: grabbing;
+}
+
+.avatar-crop-image {
+    position: absolute;
+    /* Usa tamanho natural da imagem - escala via transform */
+    max-width: none;
+    max-height: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+}
+
+.avatar-crop-guide {
+    position: absolute;
+    inset: 0;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* === CONTROLES DE ZOOM === */
+.avatar-zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    max-width: 250px;
+}
+
+.avatar-zoom-label {
+    font-size: var(--text-sm);
+    color: var(--color-ink-medium);
+    white-space: nowrap;
+}
+
+.avatar-zoom-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: var(--color-ink-lightest);
+    border-radius: 3px;
+    outline: none;
+}
+
+.avatar-zoom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--color-sepia);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.avatar-zoom-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.avatar-zoom-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--color-sepia);
+    cursor: pointer;
+    border: none;
+}
+
+/* === INSTRUÇÕES === */
+.avatar-instructions {
+    font-size: var(--text-xs);
+    color: var(--color-ink-faded);
+    text-align: center;
+    font-style: italic;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-parchment-light);
+    border-radius: var(--radius-sm);
+    width: 100%;
+}
+
+/* === BOTÕES DE AÇÃO === */
+.avatar-editor-footer {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-parchment-dark);
+    border-top: 2px solid var(--color-sepia);
+    justify-content: center;
+}
+
+.avatar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+.avatar-btn-confirm {
+    background: linear-gradient(135deg, var(--color-success) 0%, #1e5631 100%);
+    color: white;
+    border: 2px solid var(--color-success);
+}
+
+.avatar-btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 107, 62, 0.4);
+}
+
+.avatar-btn-remove {
+    background: linear-gradient(135deg, var(--color-blood) 0%, var(--color-blood-dark) 100%);
+    color: white;
+    border: 2px solid var(--color-blood-dark);
+}
+
+.avatar-btn-remove:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 46, 46, 0.4);
+}
+
+.avatar-btn-cancel {
+    background: transparent;
+    color: var(--color-ink);
+    border: 2px solid var(--color-ink-light);
+}
+
+.avatar-btn-cancel:hover {
+    background: var(--color-parchment);
+    border-color: var(--color-ink);
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 480px) {
+    .avatar-editor-container {
+        max-width: 100%;
+        margin: var(--space-2);
+    }
+    
+    .avatar-upload-zone,
+    .avatar-crop-area {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .avatar-editor-footer {
+        flex-direction: column;
+    }
+    
+    .avatar-btn {
+        width: 100%;
+    }
+}
