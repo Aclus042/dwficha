@@ -1057,103 +1057,12 @@ const CharacterSheetPage = {
 
     /**
      * Renderiza a seção de movimentos de multiclasse
+     * Delega para MovementCard.renderMulticlassMovesSection() que possui renderização completa
      * @param {Array} multiclassMoves - Movimentos obtidos via multiclasse
      * @returns {HTMLElement}
      */
     renderMulticlassMovesSection(multiclassMoves) {
-        const section = document.createElement('div');
-        section.className = 'movement-section multiclass-section';
-        
-        section.innerHTML = `
-            <div class="movement-section-header">
-                <h3 class="movement-section-title">🌟 Movimentos de Multiclasse</h3>
-                <span class="movement-section-count">${multiclassMoves.length} movimento${multiclassMoves.length > 1 ? 's' : ''}</span>
-            </div>
-            <div class="movement-grid multiclass-moves-grid"></div>
-        `;
-        
-        const grid = section.querySelector('.multiclass-moves-grid');
-        
-        multiclassMoves.forEach(move => {
-            const classData = getClassById(move.fromClass);
-            const displayData = CLASS_LIST.find(c => c.id === move.fromClass);
-            
-            // Busca dados completos do movimento se não estiverem salvos
-            let moveDescription = move.description;
-            let moveResults = move.results;
-            let moveTrigger = move.trigger;
-            let moveAttribute = move.attribute;
-            let moveOptions = move.options;
-            let moveLoreOptions = move.loreOptions;
-            
-            // Sempre busca do original para garantir dados completos
-            if (classData) {
-                const allMoves = [
-                    ...(classData.startingMoves || []),
-                    ...(classData.advancedMoves2_5 || []),
-                    ...(classData.advancedMoves6_10 || [])
-                ];
-                const originalMove = allMoves.find(m => m.id === move.moveId);
-                if (originalMove) {
-                    moveDescription = moveDescription || originalMove.description;
-                    moveResults = moveResults || originalMove.results;
-                    moveTrigger = moveTrigger || originalMove.trigger;
-                    moveAttribute = moveAttribute || originalMove.attribute;
-                    moveOptions = moveOptions || originalMove.options;
-                    moveLoreOptions = moveLoreOptions || originalMove.loreOptions;
-                }
-            }
-            
-            // Renderiza opções se existirem
-            let optionsHtml = '';
-            if (moveOptions && moveOptions.length > 0) {
-                optionsHtml = `
-                    <div class="movement-options">
-                        <ul class="movement-options-list">
-                            ${moveOptions.map(opt => `<li>${opt}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }
-            if (moveLoreOptions && moveLoreOptions.length > 0) {
-                optionsHtml = `
-                    <div class="movement-options">
-                        <span class="options-label">Áreas de conhecimento:</span>
-                        <ul class="movement-options-list">
-                            ${moveLoreOptions.map(opt => `<li>${opt}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }
-            
-            const card = document.createElement('div');
-            card.className = 'movement-card movement-card-acquired movement-card-multiclass';
-            card.style.setProperty('--class-color', displayData?.color || '#666');
-            
-            card.innerHTML = `
-                <div class="movement-header">
-                    <span class="movement-badge movement-badge-multiclass" title="De: ${classData?.name || move.fromClass}">
-                        ${displayData?.icon || '📜'} ${classData?.name || move.fromClass}
-                    </span>
-                    ${moveAttribute ? `<span class="movement-attribute">+${moveAttribute.toUpperCase()}</span>` : ''}
-                </div>
-                <h4 class="movement-name">${move.name}</h4>
-                ${moveTrigger ? `<p class="movement-trigger">${moveTrigger}</p>` : ''}
-                <div class="movement-description">${Helpers.formatMovementText(moveDescription || '')}</div>
-                ${optionsHtml}
-                ${moveResults ? `
-                    <div class="movement-results">
-                        ${moveResults.success ? `<div class="result result-success"><strong>10+:</strong> ${moveResults.success}</div>` : ''}
-                        ${moveResults.partial ? `<div class="result result-partial"><strong>7-9:</strong> ${moveResults.partial}</div>` : ''}
-                        ${moveResults.fail ? `<div class="result result-fail"><strong>6-:</strong> ${moveResults.fail}</div>` : ''}
-                    </div>
-                ` : ''}
-            `;
-            
-            grid.appendChild(card);
-        });
-        
-        return section;
+        return MovementCard.renderMulticlassMovesSection(multiclassMoves);
     },
 
     /**

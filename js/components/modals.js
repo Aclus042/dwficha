@@ -1077,6 +1077,80 @@ const MulticlassModal = {
             `;
         }
         
+        // Renderiza opções de alvo (Ranger - Tiro ao Alvo)
+        let targetOptionsHtml = '';
+        if (move.targetOptions && move.targetOptions.length > 0) {
+            targetOptionsHtml = `
+                <div class="movement-target-options">
+                    ${move.targetOptions.map(target => `
+                        <div class="movement-target-option">
+                            <div class="target-option-header">
+                                <strong class="target-name">• ${target.name}:</strong>
+                            </div>
+                            <div class="target-option-results">
+                                <div class="target-result target-result-partial">
+                                    <span class="result-label">7-9</span>
+                                    <span class="result-text">${target.partial}</span>
+                                </div>
+                                <div class="target-result target-result-success">
+                                    <span class="result-label">10+</span>
+                                    <span class="result-text">${target.success}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        // Renderiza opções de comando (Ranger - Comandar)
+        let commandOptionsHtml = '';
+        if (move.commandOptions && move.commandOptions.length > 0) {
+            commandOptionsHtml = `
+                <div class="movement-command-options">
+                    <ul class="movement-command-list">
+                        ${move.commandOptions.map(opt => `<li class="movement-command-item">${Helpers.formatMovementText(opt)}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+        
+        // Renderiza opções parciais (lista de escolhas para 7-9)
+        let partialOptionsHtml = '';
+        if (move.partialOptions && move.partialOptions.length > 0) {
+            partialOptionsHtml = `
+                <div class="movement-options">
+                    <ul class="movement-options-list">
+                        ${move.partialOptions.map(opt => `<li>${opt}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+        
+        // Renderiza opções de hold (lista de perguntas/efeitos)
+        let holdOptionsHtml = '';
+        if (move.holdOptions && move.holdOptions.length > 0) {
+            holdOptionsHtml = `
+                <div class="movement-options">
+                    <ul class="movement-options-list">
+                        ${move.holdOptions.map(opt => `<li>${typeof opt === 'string' ? opt : opt.text || opt.name || ''}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+        
+        // Nota de sistema especial
+        let systemNoteHtml = '';
+        if (move.hasSignatureWeaponBuilder) {
+            systemNoteHtml += `<div class="movement-system-note"><span>⚔️</span> <em>Inclui construtor de Arma Favorita</em></div>`;
+        }
+        if (move.hasAnimalCompanionSystem) {
+            systemNoteHtml += `<div class="movement-system-note"><span>🐾</span> <em>Inclui construtor de Companheiro Animal</em></div>`;
+        }
+        if (move.hasQuestBuilder) {
+            systemNoteHtml += `<div class="movement-system-note"><span>⚔️</span> <em>Inclui construtor de Busca Sagrada</em></div>`;
+        }
+        
         return `
             <div class="multiclass-move-card" 
                  data-move-id="${move.id}" 
@@ -1093,6 +1167,10 @@ const MulticlassModal = {
                 ${move.trigger ? `<p class="multiclass-move-trigger">${move.trigger}</p>` : ''}
                 <div class="multiclass-move-description">${formattedDescription}</div>
                 ${optionsHtml}
+                ${targetOptionsHtml}
+                ${commandOptionsHtml}
+                ${partialOptionsHtml}
+                ${holdOptionsHtml}
                 ${move.results ? `
                     <div class="multiclass-move-results">
                         ${move.results.success ? `<div class="result result-success"><strong>10+:</strong> ${move.results.success}</div>` : ''}
@@ -1100,6 +1178,7 @@ const MulticlassModal = {
                         ${move.results.fail ? `<div class="result result-fail"><strong>6-:</strong> ${move.results.fail}</div>` : ''}
                     </div>
                 ` : ''}
+                ${systemNoteHtml}
             </div>
         `;
     },

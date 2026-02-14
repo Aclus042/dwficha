@@ -46,8 +46,8 @@ const CLASS_MAGO = {
             description: "Descobrir informações a respeito de um enigma ou mistério mágico."
         },
         {
-            id: "mal",
-            name: "Mal",
+            id: "mau",
+            name: "Mau",
             description: "Usar magia para causar medo e terror."
         }
     ],

@@ -45,8 +45,8 @@ const CLASS_LADRAO = {
             description: "Evitar ser detectado ou se infiltre um local."
         },
         {
-            id: "mal",
-            name: "Mal",
+            id: "mau",
+            name: "Mau",
             description: "Repassar o perigo ou a culpa para outra pessoa."
         }
     ],

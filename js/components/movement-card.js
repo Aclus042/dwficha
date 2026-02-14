@@ -1498,86 +1498,91 @@ const MovementCard = {
         const grid = document.createElement('div');
         grid.className = 'movement-grid multiclass-moves-grid';
         
+        const characterData = Store.get('character');
+        
         multiclassMoves.forEach(move => {
-            const classData = getClassById(move.fromClass);
+            const sourceClassData = getClassById(move.fromClass);
             const displayData = CLASS_LIST.find(c => c.id === move.fromClass);
             
-            // Busca dados completos do movimento se não estiverem salvos
-            let moveDescription = move.description;
-            let moveResults = move.results;
-            let moveTrigger = move.trigger;
-            let moveAttribute = move.attribute;
-            let moveOptions = move.options;
-            let moveLoreOptions = move.loreOptions;
-            
-            // Sempre busca do original para garantir dados completos
-            if (classData) {
+            // Busca dados completos do movimento original na classe de origem
+            let originalMove = null;
+            if (sourceClassData) {
                 const allMoves = [
-                    ...(classData.startingMoves || []),
-                    ...(classData.advancedMoves2_5 || []),
-                    ...(classData.advancedMoves6_10 || [])
+                    ...(sourceClassData.startingMoves || []),
+                    ...(sourceClassData.advancedMoves2_5 || []),
+                    ...(sourceClassData.advancedMoves6_10 || [])
                 ];
-                const originalMove = allMoves.find(m => m.id === move.moveId);
-                if (originalMove) {
-                    moveDescription = moveDescription || originalMove.description;
-                    moveResults = moveResults || originalMove.results;
-                    moveTrigger = moveTrigger || originalMove.trigger;
-                    moveAttribute = moveAttribute || originalMove.attribute;
-                    moveOptions = moveOptions || originalMove.options;
-                    moveLoreOptions = moveLoreOptions || originalMove.loreOptions;
-                }
+                originalMove = allMoves.find(m => m.id === move.moveId);
             }
             
-            // Renderiza opções se existirem
-            let optionsHtml = '';
-            if (moveOptions && moveOptions.length > 0) {
-                optionsHtml = `
-                    <div class="movement-options">
-                        <ul class="movement-options-list">
-                            ${moveOptions.map(opt => `<li>${opt}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }
-            if (moveLoreOptions && moveLoreOptions.length > 0) {
-                optionsHtml = `
-                    <div class="movement-options">
-                        <span class="options-label">Áreas de conhecimento:</span>
-                        <ul class="movement-options-list">
-                            ${moveLoreOptions.map(opt => `<li>${opt}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
+            // Usa os dados completos do movimento original (com todas as propriedades interativas)
+            const fullMoveData = originalMove || move;
+            
+            // Renderiza usando MovementCard.render() para obter todas as funcionalidades interativas
+            const card = this.render(fullMoveData, {
+                isAcquired: true,
+                isStarting: false,
+                showCheckbox: false,
+                characterData
+            });
+            
+            // Adiciona classes de multiclasse ao card
+            card.classList.add('movement-card-multiclass');
+            if (displayData?.color) {
+                card.style.setProperty('--class-color', displayData.color);
             }
             
-            const card = document.createElement('div');
-            card.className = 'movement-card movement-card-acquired movement-card-multiclass';
-            card.style.setProperty('--class-color', displayData?.color || '#666');
-            
-            card.innerHTML = `
-                <div class="movement-header">
-                    <span class="movement-badge movement-badge-multiclass" title="De: ${classData?.name || move.fromClass}">
-                        ${displayData?.icon || '📜'} ${classData?.name || move.fromClass}
-                    </span>
-                    ${moveAttribute ? `<span class="movement-attribute">+${moveAttribute.toUpperCase()}</span>` : ''}
-                </div>
-                <h4 class="movement-name">${move.name}</h4>
-                ${moveTrigger ? `<p class="movement-trigger">${moveTrigger}</p>` : ''}
-                <div class="movement-description">${Helpers.formatMovementText(moveDescription || '')}</div>
-                ${optionsHtml}
-                ${moveResults ? `
-                    <div class="movement-results">
-                        ${moveResults.success ? `<div class="result result-success"><strong>10+:</strong> ${moveResults.success}</div>` : ''}
-                        ${moveResults.partial ? `<div class="result result-partial"><strong>7-9:</strong> ${moveResults.partial}</div>` : ''}
-                        ${moveResults.fail ? `<div class="result result-fail"><strong>6-:</strong> ${moveResults.fail}</div>` : ''}
-                    </div>
-                ` : ''}
-            `;
+            // Adiciona badge de multiclasse no topo do cabeçalho
+            const cardHeader = card.querySelector('.movement-header');
+            if (cardHeader) {
+                const badge = document.createElement('span');
+                badge.className = 'movement-badge movement-badge-multiclass';
+                badge.title = `De: ${sourceClassData?.name || move.fromClass}`;
+                badge.innerHTML = `${displayData?.icon || '📜'} ${sourceClassData?.name || move.fromClass}`;
+                cardHeader.insertBefore(badge, cardHeader.firstChild);
+            }
             
             grid.appendChild(card);
         });
         
         section.appendChild(grid);
+        
+        // === SISTEMAS ESPECIAIS DE MULTICLASSE ===
+        // Renderiza builders (Arma Favorita, Companheiro Animal, Busca Sagrada)
+        // para movimentos de multiclasse que os requerem
+        
+        multiclassMoves.forEach(move => {
+            const sourceClassData = getClassById(move.fromClass);
+            if (!sourceClassData) return;
+            
+            // Busca o movimento original para verificar flags de sistemas especiais
+            const allMoves = [
+                ...(sourceClassData.startingMoves || []),
+                ...(sourceClassData.advancedMoves2_5 || []),
+                ...(sourceClassData.advancedMoves6_10 || [])
+            ];
+            const originalMove = allMoves.find(m => m.id === move.moveId);
+            if (!originalMove) return;
+            
+            // Sistema de Arma Favorita (Guerreiro via multiclasse)
+            if (originalMove.hasSignatureWeaponBuilder && sourceClassData.signatureWeapon && typeof SignatureWeapon !== 'undefined') {
+                const weaponBuilder = SignatureWeapon.render(sourceClassData.signatureWeapon);
+                section.appendChild(weaponBuilder);
+            }
+            
+            // Sistema de Companheiro Animal (Ranger via multiclasse)
+            if (originalMove.hasAnimalCompanionSystem && sourceClassData.animalCompanion && typeof AnimalCompanion !== 'undefined') {
+                const companionBuilder = AnimalCompanion.render(sourceClassData.animalCompanion);
+                section.appendChild(companionBuilder);
+            }
+            
+            // Sistema de Busca Sagrada (Paladino via multiclasse)
+            if (originalMove.hasQuestBuilder && sourceClassData.quest && typeof PaladinQuest !== 'undefined') {
+                const questBuilder = PaladinQuest.render(sourceClassData.quest);
+                section.appendChild(questBuilder);
+            }
+        });
+        
         return section;
     }
 };

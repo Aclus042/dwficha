@@ -47,8 +47,8 @@ const CLASS_CLERIGO = {
             description: "Colocar-se em perigo seguindo os preceitos de sua igreja ou deus."
         },
         {
-            id: "mal",
-            name: "Mal",
+            id: "mau",
+            name: "Mau",
             description: "Prejudicar outra pessoa para provar a superioridade de sua igreja ou deus."
         }
     ],

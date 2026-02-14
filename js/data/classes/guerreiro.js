@@ -59,8 +59,8 @@ const CLASS_GUERREIRO = {
             description: "Derrotar um adversário à sua altura."
         },
         {
-            id: "mal",
-            name: "Mal",
+            id: "mau",
+            name: "Mau",
             description: "Matar um inimigo indefeso ou cercado."
         }
     ],
