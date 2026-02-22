@@ -94,6 +94,19 @@ const MovementCard = {
             card.appendChild(description);
         }
 
+        // Bullet points (lista de itens, ex: Preparar Feitiços)
+        if (move.bulletPoints && move.bulletPoints.length > 0 && !compact) {
+            const bulletList = document.createElement('ul');
+            bulletList.className = 'movement-bullet-list';
+            move.bulletPoints.forEach(point => {
+                const li = document.createElement('li');
+                li.className = 'movement-bullet-item';
+                li.innerHTML = Helpers.formatMovementText(point);
+                bulletList.appendChild(li);
+            });
+            card.appendChild(bulletList);
+        }
+
         // Resultados de rolagem (se houver)
         if (move.results && !compact) {
             const results = this.renderResults(move.results);

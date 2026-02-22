@@ -434,6 +434,25 @@
     border-radius: var(--radius-sm);
 }
 
+/* === LISTA DE BULLET POINTS (Preparar Feitiços etc.) === */
+.movement-bullet-list {
+    margin: var(--space-3) 0 0 0;
+    padding: 0 0 0 var(--space-5);
+    list-style: disc;
+}
+
+.movement-bullet-item {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: var(--space-2);
+    padding-left: var(--space-1);
+}
+
+.movement-bullet-item:last-child {
+    margin-bottom: 0;
+}
+
 /* === OPÇÕES DE ALVO (Ranger - Tiro ao Alvo) === */
 .movement-target-options {
     margin-top: var(--space-4);

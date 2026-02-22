@@ -329,6 +329,33 @@
     box-shadow: none;
 }
 
+/* === CARD DE FEITIÇO RACIAL === */
+.grimoire-spell-card.racial-from-clerigo {
+    border-color: #c9b458;
+    background: linear-gradient(135deg,
+        rgba(201, 180, 88, 0.08) 0%,
+        var(--color-parchment) 100%);
+    box-shadow: 0 0 0 1px rgba(201, 180, 88, 0.15);
+}
+
+.grimoire-spell-card.racial-from-clerigo.prepared {
+    border-color: #b8a040;
+    box-shadow: 0 0 0 1px rgba(184, 160, 64, 0.25);
+}
+
+.grimoire-spell-card.racial-from-mago {
+    border-color: #6a9fd8;
+    background: linear-gradient(135deg,
+        rgba(106, 159, 216, 0.08) 0%,
+        var(--color-parchment) 100%);
+    box-shadow: 0 0 0 1px rgba(106, 159, 216, 0.15);
+}
+
+.grimoire-spell-card.racial-from-mago.prepared {
+    border-color: #5088c0;
+    box-shadow: 0 0 0 1px rgba(80, 136, 192, 0.25);
+}
+
 /* === HEADER DO CARD === */
 .grimoire-spell-header {
     display: flex;

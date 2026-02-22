@@ -381,7 +381,7 @@ const Grimoire = {
         const expandedSpells = character?.expandedSpells || [];
         const expandedPreparedSpells = character?.expandedPreparedSpells || [];
         if (expandedSpells.length > 0) {
-            const expandedSection = this.renderExpandedSpellsSection(expandedSpells, expandedPreparedSpells);
+            const expandedSection = this.renderExpandedSpellsSection(expandedSpells, expandedPreparedSpells, 'mago');
             content.appendChild(expandedSection);
         }
         
@@ -392,7 +392,7 @@ const Grimoire = {
      * Renderiza a seção de feitiços expandidos (Grimório Expandido) - com accordion
      * Feitiços expandidos são extras e não contam para o limite normal
      */
-    renderExpandedSpellsSection(expandedSpells, expandedPreparedSpells) {
+    renderExpandedSpellsSection(expandedSpells, expandedPreparedSpells, ownerClass = 'mago') {
         const sectionKey = 'grimorio_expandido';
         const isOpen = this.openAccordions.has(sectionKey);
         
@@ -460,7 +460,8 @@ const Grimoire = {
         
         expandedSpells.forEach(spell => {
             const card = this.renderExpandedSpellCard(spell, {
-                isPrepared: expandedPreparedSpells.includes(spell.spellId)
+                isPrepared: expandedPreparedSpells.includes(spell.spellId),
+                ownerClass: ownerClass
             });
             grid.appendChild(card);
         });
@@ -475,27 +476,37 @@ const Grimoire = {
      * Renderiza um card de feitiço expandido (mesma estrutura do Mago)
      */
     renderExpandedSpellCard(spellData, options = {}) {
-        const { isPrepared = false } = options;
+        const { isPrepared = false, ownerClass = 'mago' } = options;
         
         const character = Store.get('character');
         const activeOngoingSpells = character?.activeOngoingSpells || [];
         const isActive = activeOngoingSpells.includes(spellData.spellId);
         
+        const isRacial = spellData.grantedBy && spellData.grantedBy.startsWith('racial_');
+        const fromClassSlug = spellData.fromClass === 'clerigo' ? 'clerigo' : 'mago';
+        
         const card = document.createElement('div');
-        card.className = `grimoire-spell-card ${isPrepared ? 'prepared' : ''} ${isActive ? 'active-ongoing' : ''}`;
+        card.className = `grimoire-spell-card ${isPrepared ? 'prepared' : ''} ${isActive ? 'active-ongoing' : ''} ${isRacial ? 'racial-spell racial-from-' + fromClassSlug : ''}`;
         card.setAttribute('data-spell-id', spellData.spellId);
         card.setAttribute('data-spell-level', spellData.level);
-        card.setAttribute('data-spell-class', 'mago');
+        card.setAttribute('data-spell-class', ownerClass);
         card.setAttribute('data-from-class', spellData.fromClass);
+        if (isRacial) card.setAttribute('data-racial', 'true');
         
         // Header do card
         const header = document.createElement('div');
         header.className = 'grimoire-spell-header';
         
-        // Badge de origem (Grimório Expandido)
+        // Badge de origem
         const originBadge = document.createElement('div');
         originBadge.className = 'grimoire-bonus-badge';
-        originBadge.innerHTML = `<span class="bonus-icon">📜</span> Grimório Expandido (${spellData.fromClass === 'clerigo' ? 'Clérigo' : spellData.fromClass})`;
+        if (isRacial) {
+            const icon = spellData.fromClass === 'clerigo' ? '✝️' : '📖';
+            const className = spellData.fromClass === 'clerigo' ? 'Clérigo' : 'Mago';
+            originBadge.innerHTML = `<span class="bonus-icon">${icon}</span> Feitiço Racial (${className})`;
+        } else {
+            originBadge.innerHTML = `<span class="bonus-icon">📜</span> Grimório Expandido (${spellData.fromClass === 'clerigo' ? 'Clérigo' : spellData.fromClass})`;
+        }
         header.appendChild(originBadge);
         
         // Controles do feitiço
@@ -509,7 +520,7 @@ const Grimoire = {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.className = 'grimoire-spell-checkbox';
-        checkbox.id = `mago-expanded-${spellData.spellId}`;
+        checkbox.id = `${ownerClass}-expanded-${spellData.spellId}`;
         checkbox.checked = isPrepared;
         checkbox.addEventListener('change', (e) => {
             this.handleExpandedSpellPrepare(spellData.spellId, e.target.checked);
@@ -527,7 +538,7 @@ const Grimoire = {
         });
         
         const preparedLabel = document.createElement('label');
-        preparedLabel.htmlFor = `mago-expanded-${spellData.spellId}`;
+        preparedLabel.htmlFor = `${ownerClass}-expanded-${spellData.spellId}`;
         preparedLabel.className = 'grimoire-control-label';
         preparedLabel.innerHTML = '<span class="control-icon">✔️</span> Preparado';
         
@@ -543,15 +554,19 @@ const Grimoire = {
             const activeCheckbox = document.createElement('input');
             activeCheckbox.type = 'checkbox';
             activeCheckbox.className = 'grimoire-active-checkbox';
-            activeCheckbox.id = `mago-expanded-active-${spellData.spellId}`;
+            activeCheckbox.id = `${ownerClass}-expanded-active-${spellData.spellId}`;
             activeCheckbox.checked = isActive;
             activeCheckbox.disabled = !isPrepared;
             activeCheckbox.addEventListener('change', (e) => {
-                this.handleMagoActiveToggle({ id: spellData.spellId, ongoing: true }, e.target.checked, card);
+                if (ownerClass === 'clerigo') {
+                    this.handleActiveToggle({ id: spellData.spellId, ongoing: true }, e.target.checked, card);
+                } else {
+                    this.handleMagoActiveToggle({ id: spellData.spellId, ongoing: true }, e.target.checked, card);
+                }
             });
             
             const activeLabel = document.createElement('label');
-            activeLabel.htmlFor = `mago-expanded-active-${spellData.spellId}`;
+            activeLabel.htmlFor = `${ownerClass}-expanded-active-${spellData.spellId}`;
             activeLabel.className = 'grimoire-control-label grimoire-control-label-active';
             activeLabel.innerHTML = '<span class="control-icon">🔥</span> Ativo';
             
@@ -635,7 +650,12 @@ const Grimoire = {
         }
         
         // Atualiza limite - feitiços expandidos não contam para o limite normal
-        this.updateMagoLimitDisplay(character.level, preparedSpells, bonusSlots, bonusPreparedSpells.length);
+        const classId = character?.classId || 'mago';
+        if (classId === 'clerigo') {
+            this.updateLimitDisplay(character.level, preparedSpells, bonusSlots, bonusPreparedSpells.length);
+        } else {
+            this.updateMagoLimitDisplay(character.level, preparedSpells, bonusSlots, bonusPreparedSpells.length);
+        }
     },
     
     /**
@@ -1289,6 +1309,14 @@ const Grimoire = {
                 content.appendChild(section);
             }
         });
+        
+        // === FEITIÇOS EXPANDIDOS (de outras classes) ===
+        const expandedSpells = character?.expandedSpells || [];
+        const expandedPreparedSpells = character?.expandedPreparedSpells || [];
+        if (expandedSpells.length > 0) {
+            const expandedSection = this.renderExpandedSpellsSection(expandedSpells, expandedPreparedSpells, 'clerigo');
+            content.appendChild(expandedSection);
+        }
         
         return content;
     },

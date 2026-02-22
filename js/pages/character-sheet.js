@@ -315,9 +315,27 @@ const CharacterSheetPage = {
                                     <div class="race-card${character.race === race.name ? ' selected' : ''}" data-race="${race.name}">
                                         <div class="race-title">${race.name}</div>
                                         <div class="race-desc">${race.description}</div>
-                                        ${race.requiresClericSpellChoice ? `
-                                            <div class="race-special-note">
-                                                <em>⚠️ ${race.clericSpellChoiceNote || 'Escolha de feitiço será implementada.'}</em>
+                                        ${race.allowsSpellFromOtherClass ? `
+                                            <div class="race-special-note race-cleric-spell-section">
+                                                ${(() => {
+                                                    const char = Store.get('character');
+                                                    const racialGrantedBy = 'racial_' + race.id + '_' + character.classId;
+                                                    const racialSpell = (char?.expandedSpells || []).find(s => s.grantedBy === racialGrantedBy);
+                                                    const sourceLabel = race.spellSource === 'clerigo' ? 'clérigo' : 'mago';
+                                                    const sourceIcon = race.spellSource === 'clerigo' ? '✝️' : '📖';
+                                                    if (racialSpell && character.race === race.name) {
+                                                        return `<div class="race-cleric-spell-chosen">
+                                                            <span class="spell-chosen-icon">${sourceIcon}</span>
+                                                            <span class="spell-chosen-text">Feitiço: <strong>${racialSpell.name}</strong> (Nv. ${racialSpell.level})</span>
+                                                            <button class="btn-race-change-spell" data-race-id="${race.id}" data-spell-source="${race.spellSource}" title="Trocar feitiço">✏️</button>
+                                                        </div>`;
+                                                    } else if (character.race === race.name) {
+                                                        return `<button class="btn-race-choose-spell" data-race-id="${race.id}" data-spell-source="${race.spellSource}">
+                                                            ${sourceIcon} Escolher feitiço de ${sourceLabel}
+                                                        </button>`;
+                                                    }
+                                                    return '';
+                                                })()}
                                             </div>
                                         ` : ''}
                                         ${race.requiresChoice && race.choiceType === 'text' ? `
@@ -477,6 +495,16 @@ const CharacterSheetPage = {
             // Prevenir que o click no input selecione o card
             input.addEventListener('click', (e) => {
                 e.stopPropagation();
+            });
+        });
+
+        // Raça Humano - botão de escolher/trocar feitiço de outra classe
+        container.querySelectorAll('.btn-race-choose-spell, .btn-race-change-spell').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const spellSource = btn.dataset.spellSource;
+                const raceId = btn.dataset.raceId;
+                this.openRacialSpellModal(spellSource, raceId);
             });
         });
 
@@ -1109,6 +1137,221 @@ const CharacterSheetPage = {
      */
     updateAlignmentDescription() {
         // Não é mais necessário, pois a descrição do alinhamento está sempre visível
+    },
+
+    /**
+     * Abre modal de seleção de feitiço de clérigo para a raça Humano do Mago.
+     * Reutiliza o sistema de ExpandedSpellModal, adaptando o grantedBy para 'racial_humano_mago'.
+     */
+    /**
+     * Abre modal genérico de seleção de feitiço racial.
+     * @param {string} spellSource - Fonte dos feitiços ('clerigo' ou 'mago')
+     * @param {string} raceId - ID da raça (ex: 'humano')
+     */
+    openRacialSpellModal(spellSource, raceId) {
+        const character = Store.get('character');
+        if (!character) return;
+
+        const expandedSpells = character.expandedSpells || [];
+        const grantedBy = 'racial_' + raceId + '_' + character.classId;
+        
+        // Feitiço racial anterior (se estiver trocando)
+        const existingRacialSpell = expandedSpells.find(s => s.grantedBy === grantedBy);
+        
+        // Coleta feitiços de nível 1 da classe fonte (sem truques/orações)
+        let spells = [];
+        
+        if (spellSource === 'clerigo') {
+            if (typeof CLERIGO_SPELLS === 'undefined') { console.warn('CLERIGO_SPELLS não encontrado'); return; }
+            if (CLERIGO_SPELLS.nivel1) {
+                spells.push(...CLERIGO_SPELLS.nivel1.map(s => ({...s, levelCategory: 'Nível 1'})));
+            }
+        } else if (spellSource === 'mago') {
+            if (typeof MAGO_SPELLS === 'undefined') { console.warn('MAGO_SPELLS não encontrado'); return; }
+            if (MAGO_SPELLS.nivel1) {
+                spells.push(...MAGO_SPELLS.nivel1.map(s => ({...s, levelCategory: 'Nível 1'})));
+            }
+        }
+        
+        // Filtra feitiços já adquiridos via expandidos (exceto o racial atual)
+        const acquiredIds = expandedSpells
+            .filter(s => s.grantedBy !== grantedBy)
+            .map(s => s.spellId);
+        spells = spells.filter(s => !acquiredIds.includes(s.id));
+        
+        const sourceLabel = spellSource === 'clerigo' ? 'clérigo' : 'mago';
+        const sourceIcon = spellSource === 'clerigo' ? '✝️' : '📖';
+        const classLabel = character.classId === 'mago' ? 'Mago' : character.classId === 'clerigo' ? 'Clérigo' : character.className;
+        
+        const spellsContent = this.buildRacialSpellContent(spells);
+        
+        const content = `
+            <div class="expanded-spell-modal-intro">
+                <p>Como <strong>${classLabel} Humano</strong>, escolha um feitiço de ${sourceLabel} para conjurar como se fosse um feitiço de ${classLabel.toLowerCase()}:</p>
+                <p class="text-muted"><small>${sourceIcon} Disponível: feitiços de 1º nível de ${sourceLabel}.</small></p>
+            </div>
+            <div class="expanded-spell-container">
+                ${spellsContent}
+            </div>
+        `;
+        
+        // Guarda contexto para uso no confirm
+        this._racialSpellContext = { spellSource, raceId, grantedBy, existingRacialSpell };
+        
+        Modal.create({
+            id: 'racial-spell',
+            title: `Feitiço Racial — Humano`,
+            titleIcon: sourceIcon,
+            content: content,
+            confirmText: 'Escolher Feitiço',
+            cancelText: 'Cancelar',
+            confirmDisabled: true,
+            onConfirm: () => this.confirmRacialSpell(),
+            onCancel: () => Modal.close('racial-spell')
+        });
+        
+        this.attachRacialSpellEvents();
+    },
+
+    /**
+     * Constrói HTML para lista de feitiços no modal racial
+     */
+    buildRacialSpellContent(spells) {
+        if (spells.length === 0) {
+            return '<p class="text-muted text-center">Nenhum feitiço disponível.</p>';
+        }
+        
+        const groups = {};
+        spells.forEach(spell => {
+            const cat = spell.levelCategory || 'Outros';
+            if (!groups[cat]) groups[cat] = [];
+            groups[cat].push(spell);
+        });
+        
+        let html = '';
+        for (const [category, categorySpells] of Object.entries(groups)) {
+            html += `
+                <div class="expanded-spell-group">
+                    <h4 class="expanded-spell-group-title">${category}</h4>
+                    <div class="expanded-spell-grid">
+                        ${categorySpells.map(spell => `
+                            <div class="expanded-spell-card" data-spell-id="${spell.id}" data-spell-level="${spell.level}">
+                                <div class="expanded-spell-header">
+                                    <h4 class="expanded-spell-name">${spell.name}</h4>
+                                    <span class="expanded-spell-level">Nv. ${spell.level}</span>
+                                </div>
+                                <p class="expanded-spell-description">${(spell.description || '').substring(0, 150)}${(spell.description || '').length > 150 ? '...' : ''}</p>
+                                ${spell.ongoing ? '<span class="expanded-spell-tag">Contínuo</span>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        return html;
+    },
+
+    /**
+     * Anexa eventos de seleção no modal racial
+     */
+    attachRacialSpellEvents() {
+        const modal = document.getElementById('modal-racial-spell');
+        if (!modal) return;
+        
+        this._racialSelectedSpell = null;
+        
+        const spellCards = modal.querySelectorAll('.expanded-spell-card');
+        spellCards.forEach(card => {
+            card.addEventListener('click', () => {
+                spellCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                
+                this._racialSelectedSpell = {
+                    spellId: card.dataset.spellId,
+                    level: parseInt(card.dataset.spellLevel)
+                };
+                
+                const confirmBtn = modal.querySelector('.modal-confirm');
+                if (confirmBtn) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.classList.remove('btn-disabled');
+                }
+            });
+        });
+    },
+
+    /**
+     * Confirma a seleção do feitiço racial de clérigo
+     */
+    confirmRacialSpell() {
+        if (!this._racialSelectedSpell || !this._racialSpellContext) return;
+        
+        const character = Store.get('character');
+        if (!character) return;
+        
+        const { spellSource, grantedBy, existingRacialSpell } = this._racialSpellContext;
+        
+        // Busca dados completos do feitiço na fonte correta
+        let spellData = null;
+        let allSpells = [];
+        
+        if (spellSource === 'clerigo' && typeof CLERIGO_SPELLS !== 'undefined') {
+            allSpells = [
+                ...(CLERIGO_SPELLS.nivel1 || []),
+                ...(CLERIGO_SPELLS.nivel3 || []),
+                ...(CLERIGO_SPELLS.nivel5 || []),
+                ...(CLERIGO_SPELLS.nivel7 || []),
+                ...(CLERIGO_SPELLS.nivel9 || [])
+            ];
+        } else if (spellSource === 'mago' && typeof MAGO_SPELLS !== 'undefined') {
+            allSpells = [
+                ...(MAGO_SPELLS.nivel1 || []),
+                ...(MAGO_SPELLS.nivel3 || []),
+                ...(MAGO_SPELLS.nivel5 || []),
+                ...(MAGO_SPELLS.nivel7 || []),
+                ...(MAGO_SPELLS.nivel9 || [])
+            ];
+        }
+        
+        spellData = allSpells.find(s => s.id === this._racialSelectedSpell.spellId);
+        if (!spellData) return;
+        
+        // Remove feitiço racial anterior se existir
+        let expandedSpells = [...(character.expandedSpells || [])];
+        expandedSpells = expandedSpells.filter(s => s.grantedBy !== grantedBy);
+        
+        // Também remove dos preparados se havia um feitiço anterior
+        if (existingRacialSpell) {
+            let expandedPrepared = [...(character.expandedPreparedSpells || [])];
+            expandedPrepared = expandedPrepared.filter(id => id !== existingRacialSpell.spellId);
+            Store.setCharacterProperty('expandedPreparedSpells', expandedPrepared);
+        }
+        
+        // Adiciona novo feitiço
+        expandedSpells.push({
+            spellId: this._racialSelectedSpell.spellId,
+            fromClass: spellSource,
+            grantedBy: grantedBy,
+            name: spellData.name,
+            level: spellData.level,
+            description: spellData.description,
+            ongoing: spellData.ongoing || false
+        });
+        
+        Store.setCharacterProperty('expandedSpells', expandedSpells);
+        
+        Modal.close('racial-spell');
+        
+        // Re-renderiza a seção personagem para mostrar o feitiço escolhido
+        const personagemContent = document.querySelector('.section-personagem')?.closest('.sheet-section-content');
+        if (personagemContent) {
+            this.renderPersonagemSection(personagemContent);
+        }
+        
+        // Se houver grimório, re-renderiza
+        if (typeof CharacterSheetPage !== 'undefined') {
+            CharacterSheetPage.renderSection('grimorio');
+        }
     },
 
     /**

@@ -1166,6 +1166,11 @@ const MulticlassModal = {
                 </div>
                 ${move.trigger ? `<p class="multiclass-move-trigger">${move.trigger}</p>` : ''}
                 <div class="multiclass-move-description">${formattedDescription}</div>
+                ${move.bulletPoints && move.bulletPoints.length > 0 ? `
+                    <ul class="movement-bullet-list">
+                        ${move.bulletPoints.map(point => `<li class="movement-bullet-item">${Helpers.formatMovementText(point)}</li>`).join('')}
+                    </ul>
+                ` : ''}
                 ${optionsHtml}
                 ${targetOptionsHtml}
                 ${commandOptionsHtml}

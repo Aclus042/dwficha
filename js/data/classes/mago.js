@@ -29,7 +29,8 @@ const CLASS_MAGO = {
             id: "humano",
             name: "Humano",
             description: "Escolha um feitiço de clérigo. Você pode conjurá-lo como se fosse um feitiço de mago.",
-            requiresClericSpellChoice: true
+            allowsSpellFromOtherClass: true,
+            spellSource: "clerigo"
         }
     ],
     
