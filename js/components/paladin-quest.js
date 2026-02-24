@@ -32,128 +32,151 @@ const PaladinQuest = {
     stepMission(config, saved) {
         const step = document.createElement('div');
         step.className = 'paladin-quest-step';
-        step.innerHTML = `
-            <div class="step-header">
-                <span class="step-number">1</span>
-                <span class="step-title">Diga o que pretende fazer:</span>
-            </div>
-            <div class="step-options step-options-mission">
-                ${config.questOptions.map((opt, i) => {
-                    const hasBlank = opt.includes('________________');
-                    const isSelected = saved?.missionType === i;
-                    const savedText = saved?.missionTarget || '';
-                    
-                    if (hasBlank) {
-                        const parts = opt.split('________________');
-                        if (isSelected) {
-                            // Selecionado: mostra input editável
-                            return `
-                                <label class="step-option mission-option selected">
-                                    <input type="radio" name="quest-mission" value="${i}" checked>
-                                    <span class="option-text">
-                                        ${parts[0]}<input type="text" class="mission-target-input" 
-                                            data-mission="${i}" 
-                                            placeholder="________________" 
-                                            value="${savedText}"
-                                            maxlength="50">${parts[1] || ''}
-                                    </span>
-                                </label>
-                            `;
-                        } else {
-                            // Não selecionado: mostra texto puro com underlines
-                            return `
-                                <label class="step-option mission-option">
-                                    <input type="radio" name="quest-mission" value="${i}">
-                                    <span class="option-text">${opt}</span>
-                                </label>
-                            `;
-                        }
-                    }
-                    return `
-                        <label class="step-option mission-option ${isSelected ? 'selected' : ''}">
-                            <input type="radio" name="quest-mission" value="${i}" ${isSelected ? 'checked' : ''}>
-                            <span class="option-text">${opt}</span>
-                        </label>
-                    `;
-                }).join('')}
-            </div>
+        
+        // Renderiza o HTML base
+        const header = document.createElement('div');
+        header.className = 'step-header';
+        header.innerHTML = `
+            <span class="step-number">1</span>
+            <span class="step-title">Diga o que pretende fazer:</span>
         `;
+        step.appendChild(header);
+        
+        // Container de opções
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'step-options step-options-mission';
+        
+        // Renderiza cada opção
+        config.questOptions.forEach((opt, i) => {
+            const hasBlank = opt.includes('________________');
+            const isSelected = saved?.missionType === i;
+            const savedText = saved?.missionTarget || '';
+            
+            const label = document.createElement('label');
+            label.className = 'step-option mission-option';
+            if (isSelected) label.classList.add('selected');
+            if (hasBlank) label.classList.add('has-editable-field');
+            
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'quest-mission';
+            radio.value = i;
+            if (isSelected) radio.checked = true;
+            
+            const textSpan = document.createElement('span');
+            textSpan.className = 'option-text';
+            
+            if (hasBlank) {
+                const parts = opt.split('________________');
+                
+                // Parte inicial do texto
+                const textNode1 = document.createTextNode(parts[0]);
+                textSpan.appendChild(textNode1);
+                
+                // Input
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'mission-target-input';
+                input.dataset.mission = i;
+                input.placeholder = 'Clique para preencher';
+                input.maxLength = 50;
+                input.value = savedText;
+                if (!isSelected) {
+                    input.style.display = 'none';
+                }
+                textSpan.appendChild(input);
+                
+                // Placeholder visível
+                const placeholder = document.createElement('span');
+                placeholder.className = 'placeholder-inline';
+                placeholder.dataset.mission = i;
+                placeholder.textContent = '________________';
+                if (isSelected) {
+                    placeholder.style.display = 'none';
+                }
+                textSpan.appendChild(placeholder);
+                
+                // Parte final do texto
+                if (parts[1]) {
+                    const textNode2 = document.createTextNode(parts[1]);
+                    textSpan.appendChild(textNode2);
+                }
+            } else {
+                textSpan.textContent = opt;
+            }
+            
+            label.appendChild(radio);
+            label.appendChild(textSpan);
+            optionsContainer.appendChild(label);
+        });
+        
+        step.appendChild(optionsContainer);
         
         setTimeout(() => {
-            this.bindMissionEvents(step, config);
+            this.bindMissionEventsV2(step, config);
         }, 0);
         
         return step;
     },
 
-    bindMissionEvents(step, config) {
+    bindMissionEventsV2(step, config) {
         // Evento para seleção de missão
         step.querySelectorAll('input[name="quest-mission"]').forEach(radio => {
             radio.addEventListener('change', () => {
                 const missionIndex = parseInt(radio.value);
+                
+                // Salva o tipo de missão
                 this.save('missionType', missionIndex);
                 this.save('missionTarget', '');
                 
-                // Re-renderiza as opções
-                this.rebuildMissionOptions(step, config);
+                // Esconde todos os inputs e mostra apenas o selecionado
+                step.querySelectorAll('.mission-target-input').forEach(inp => {
+                    inp.style.display = 'none';
+                    inp.value = '';
+                });
+                step.querySelectorAll('.placeholder-inline').forEach(ph => {
+                    ph.style.display = 'inline-block';
+                });
+                
+                // Mostra o input da opção selecionada
+                const selectedInput = step.querySelector(`.mission-target-input[data-mission="${missionIndex}"]`);
+                const selectedPlaceholder = step.querySelector(`.placeholder-inline[data-mission="${missionIndex}"]`);
+                
+                if (selectedInput) {
+                    selectedInput.style.display = 'inline-block';
+                    selectedPlaceholder.style.display = 'none';
+                    selectedInput.focus();
+                }
+                
+                // Atualiza preview
+                this.updatePreview();
             });
         });
         
-        // Evento para input de texto da missão
+        // Evento para input de texto da missão - captura enquanto digita
         step.querySelectorAll('.mission-target-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                this.save('missionTarget', e.target.value);
+                this.updatePreview();
+            });
             input.addEventListener('change', (e) => {
                 this.save('missionTarget', e.target.value);
+                this.updatePreview();
             });
         });
-    },
-
-    rebuildMissionOptions(step, config) {
-        const saved = this.getSaved();
-        const optionsContainer = step.querySelector('.step-options-mission');
         
-        optionsContainer.innerHTML = config.questOptions.map((opt, i) => {
-            const hasBlank = opt.includes('________________');
-            const isSelected = saved?.missionType === i;
-            const savedText = saved?.missionTarget || '';
-            
-            if (hasBlank) {
-                const parts = opt.split('________________');
-                if (isSelected) {
-                    return `
-                        <label class="step-option mission-option selected">
-                            <input type="radio" name="quest-mission" value="${i}" checked>
-                            <span class="option-text">
-                                ${parts[0]}<input type="text" class="mission-target-input" 
-                                    data-mission="${i}" 
-                                    placeholder="________________" 
-                                    value="${savedText}"
-                                    maxlength="50">${parts[1] || ''}
-                            </span>
-                        </label>
-                    `;
-                } else {
-                    return `
-                        <label class="step-option mission-option">
-                            <input type="radio" name="quest-mission" value="${i}">
-                            <span class="option-text">${opt}</span>
-                        </label>
-                    `;
+        // Evento para clicar no placeholder (campo em branco)
+        step.querySelectorAll('.placeholder-inline').forEach(placeholder => {
+            placeholder.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const missionIndex = parseInt(placeholder.dataset.mission);
+                const radio = step.querySelector(`input[name="quest-mission"][value="${missionIndex}"]`);
+                if (radio) {
+                    radio.click();
                 }
-            }
-            return `
-                <label class="step-option mission-option ${isSelected ? 'selected' : ''}">
-                    <input type="radio" name="quest-mission" value="${i}" ${isSelected ? 'checked' : ''}>
-                    <span class="option-text">${opt}</span>
-                </label>
-            `;
-        }).join('');
-        
-        // Re-bind events
-        this.bindMissionEvents(step, config);
-        
-        // Focus no input se houver
-        const input = optionsContainer.querySelector('.mission-target-input');
-        if (input) input.focus();
+            });
+        });
     },
 
     stepGifts(config, saved) {
@@ -163,72 +186,181 @@ const PaladinQuest = {
         const step = document.createElement('div');
         step.className = 'paladin-quest-step';
         step.id = 'paladin-quest-gifts-step';
-        step.innerHTML = `
-            <div class="step-header">
-                <span class="step-number">2</span>
-                <span class="step-title">${config.giftNote}</span>
-                <span class="step-counter" id="gifts-counter">${selectedGifts.length}/${maxGifts}</span>
-            </div>
-            <div class="step-options step-options-gifts">
-                ${config.gifts.map((gift, i) => {
-                    const hasBlank = gift.includes('________________');
-                    const isSelected = selectedGifts.some(g => g.index === i);
-                    const savedData = selectedGifts.find(g => g.index === i);
-                    const isDisabled = !isSelected && selectedGifts.length >= maxGifts;
-                    
-                    if (hasBlank) {
-                        const parts = gift.split('________________');
-                        if (isSelected) {
-                            // Selecionado: mostra input editável
-                            return `
-                                <label class="step-option gift-option selected">
-                                    <input type="checkbox" name="quest-gift" value="${i}" checked>
-                                    <span class="option-text">
-                                        ${parts[0]}<input type="text" class="gift-target-input" 
-                                            data-gift="${i}" 
-                                            placeholder="________________" 
-                                            value="${savedData?.target || ''}"
-                                            maxlength="50">${parts[1] || ''}
-                                    </span>
-                                </label>
-                            `;
-                        } else {
-                            // Não selecionado: mostra texto puro com underlines
-                            return `
-                                <label class="step-option gift-option ${isDisabled ? 'disabled' : ''}">
-                                    <input type="checkbox" name="quest-gift" value="${i}" ${isDisabled ? 'disabled' : ''}>
-                                    <span class="option-text">${gift}</span>
-                                </label>
-                            `;
-                        }
-                    }
-                    return `
-                        <label class="step-option gift-option ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}">
-                            <input type="checkbox" name="quest-gift" value="${i}" 
-                                ${isSelected ? 'checked' : ''} 
-                                ${isDisabled ? 'disabled' : ''}>
-                            <span class="option-text">${gift}</span>
-                        </label>
-                    `;
-                }).join('')}
-            </div>
+        
+        // Header
+        const header = document.createElement('div');
+        header.className = 'step-header';
+        header.innerHTML = `
+            <span class="step-number">2</span>
+            <span class="step-title">${config.giftNote}</span>
+            <span class="step-counter" id="gifts-counter">${selectedGifts.length}/${maxGifts}</span>
         `;
+        step.appendChild(header);
+        
+        // Container de opções
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = 'step-options step-options-gifts';
+        
+        // Renderiza cada dádiva
+        config.gifts.forEach((gift, i) => {
+            const hasBlank = gift.includes('________________');
+            const isSelected = selectedGifts.some(g => g.index === i);
+            const savedData = selectedGifts.find(g => g.index === i);
+            const isDisabled = !isSelected && selectedGifts.length >= maxGifts;
+            
+            const label = document.createElement('label');
+            label.className = 'step-option gift-option';
+            if (isSelected) label.classList.add('selected');
+            if (hasBlank) label.classList.add('has-editable-field');
+            if (isDisabled) label.classList.add('disabled');
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = 'quest-gift';
+            checkbox.value = i;
+            checkbox.disabled = isDisabled;
+            if (isSelected) checkbox.checked = true;
+            
+            const textSpan = document.createElement('span');
+            textSpan.className = 'option-text';
+            
+            if (hasBlank) {
+                const parts = gift.split('________________');
+                
+                // Parte inicial do texto
+                const textNode1 = document.createTextNode(parts[0]);
+                textSpan.appendChild(textNode1);
+                
+                // Input
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'gift-target-input';
+                input.dataset.gift = i;
+                input.placeholder = 'Clique para preencher';
+                input.maxLength = 50;
+                input.value = savedData?.target || '';
+                if (!isSelected) {
+                    input.style.display = 'none';
+                }
+                textSpan.appendChild(input);
+                
+                // Placeholder visível
+                const placeholder = document.createElement('span');
+                placeholder.className = 'placeholder-inline';
+                placeholder.dataset.gift = i;
+                placeholder.textContent = '________________';
+                if (isSelected) {
+                    placeholder.style.display = 'none';
+                }
+                textSpan.appendChild(placeholder);
+                
+                // Parte final do texto
+                if (parts[1]) {
+                    const textNode2 = document.createTextNode(parts[1]);
+                    textSpan.appendChild(textNode2);
+                }
+            } else {
+                textSpan.textContent = gift;
+            }
+            
+            label.appendChild(checkbox);
+            label.appendChild(textSpan);
+            optionsContainer.appendChild(label);
+        });
+        
+        step.appendChild(optionsContainer);
         
         setTimeout(() => {
-            this.bindGiftEvents(step, config);
+            this.bindGiftEventsV2(step, config);
         }, 0);
         
         return step;
     },
 
-    bindGiftEvents(step, config) {
+    bindGiftEventsV2(step, config) {
+        const maxGifts = this.getMaxGifts();
+        
+        // Evento para seleção de dádivas
         step.querySelectorAll('input[name="quest-gift"]').forEach(cb => {
             cb.addEventListener('change', () => {
-                this.handleGiftChange(step, config);
+                const saved = this.getSaved();
+                const selectedGifts = saved?.gifts || [];
+                const giftIndex = parseInt(cb.value);
+                
+                if (cb.checked) {
+                    // Adiciona dádiva
+                    const targetInput = step.querySelector(`.gift-target-input[data-gift="${giftIndex}"]`);
+                    selectedGifts.push({
+                        index: giftIndex,
+                        text: config.gifts[giftIndex],
+                        target: targetInput?.value || ''
+                    });
+                } else {
+                    // Remove dádiva
+                    const idx = selectedGifts.findIndex(g => g.index === giftIndex);
+                    if (idx >= 0) {
+                        selectedGifts.splice(idx, 1);
+                    }
+                }
+                
+                this.save('gifts', selectedGifts);
+                
+                // Atualiza visibilidade dos inputs
+                step.querySelectorAll('.gift-target-input').forEach(inp => {
+                    inp.style.display = 'none';
+                });
+                step.querySelectorAll('.placeholder-inline').forEach(ph => {
+                    ph.style.display = 'inline-block';
+                });
+                
+                selectedGifts.forEach(g => {
+                    const input = step.querySelector(`.gift-target-input[data-gift="${g.index}"]`);
+                    const placeholder = step.querySelector(`.placeholder-inline[data-gift="${g.index}"]`);
+                    if (input) {
+                        input.style.display = 'inline-block';
+                        placeholder.style.display = 'none';
+                    }
+                });
+                
+                // Atualiza contador
+                const counter = step.querySelector('#gifts-counter');
+                if (counter) {
+                    counter.textContent = `${selectedGifts.length}/${maxGifts}`;
+                    counter.classList.toggle('complete', selectedGifts.length === maxGifts);
+                }
+                
+                // Habilita/desabilita checkboxes adicionais
+                const isLimitReached = selectedGifts.length >= maxGifts;
+                step.querySelectorAll('input[name="quest-gift"]').forEach(chk => {
+                    const idx = parseInt(chk.value);
+                    const isChecked = selectedGifts.some(g => g.index === idx);
+                    chk.disabled = !isChecked && isLimitReached;
+                    
+                    const label = chk.closest('label');
+                    if (isLimitReached && !isChecked) {
+                        label.classList.add('disabled');
+                    } else {
+                        label.classList.remove('disabled');
+                    }
+                });
+                
+                this.updatePreview();
             });
         });
         
+        // Evento para input de texto das dádivas
         step.querySelectorAll('.gift-target-input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const giftIndex = parseInt(e.target.dataset.gift);
+                const saved = this.getSaved();
+                const gifts = saved?.gifts || [];
+                const gift = gifts.find(g => g.index === giftIndex);
+                if (gift) {
+                    gift.target = e.target.value;
+                    this.save('gifts', gifts);
+                    this.updatePreview();
+                }
+            });
             input.addEventListener('change', (e) => {
                 const giftIndex = parseInt(e.target.dataset.gift);
                 const saved = this.getSaved();
@@ -237,89 +369,23 @@ const PaladinQuest = {
                 if (gift) {
                     gift.target = e.target.value;
                     this.save('gifts', gifts);
+                    this.updatePreview();
                 }
             });
         });
-    },
-
-    handleGiftChange(step, config) {
-        const maxGifts = this.getMaxGifts();
-        const checkboxes = step.querySelectorAll('input[name="quest-gift"]');
-        const selectedGifts = [];
         
-        checkboxes.forEach(cb => {
-            if (cb.checked) {
-                const index = parseInt(cb.value);
-                const targetInput = step.querySelector(`.gift-target-input[data-gift="${index}"]`);
-                selectedGifts.push({
-                    index,
-                    text: config.gifts[index],
-                    target: targetInput?.value || ''
-                });
-            }
-        });
-        
-        this.save('gifts', selectedGifts);
-        
-        // Re-renderiza as opções
-        this.rebuildGiftOptions(step, config);
-    },
-
-    rebuildGiftOptions(step, config) {
-        const saved = this.getSaved();
-        const selectedGifts = saved?.gifts || [];
-        const maxGifts = this.getMaxGifts();
-        const optionsContainer = step.querySelector('.step-options-gifts');
-        
-        optionsContainer.innerHTML = config.gifts.map((gift, i) => {
-            const hasBlank = gift.includes('________________');
-            const isSelected = selectedGifts.some(g => g.index === i);
-            const savedData = selectedGifts.find(g => g.index === i);
-            const isDisabled = !isSelected && selectedGifts.length >= maxGifts;
-            
-            if (hasBlank) {
-                const parts = gift.split('________________');
-                if (isSelected) {
-                    return `
-                        <label class="step-option gift-option selected">
-                            <input type="checkbox" name="quest-gift" value="${i}" checked>
-                            <span class="option-text">
-                                ${parts[0]}<input type="text" class="gift-target-input" 
-                                    data-gift="${i}" 
-                                    placeholder="________________" 
-                                    value="${savedData?.target || ''}"
-                                    maxlength="50">${parts[1] || ''}
-                            </span>
-                        </label>
-                    `;
-                } else {
-                    return `
-                        <label class="step-option gift-option ${isDisabled ? 'disabled' : ''}">
-                            <input type="checkbox" name="quest-gift" value="${i}" ${isDisabled ? 'disabled' : ''}>
-                            <span class="option-text">${gift}</span>
-                        </label>
-                    `;
+        // Evento para clicar no placeholder (campo em branco)
+        step.querySelectorAll('.placeholder-inline').forEach(placeholder => {
+            placeholder.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const giftIndex = parseInt(placeholder.dataset.gift);
+                const checkbox = step.querySelector(`input[name="quest-gift"][value="${giftIndex}"]`);
+                if (checkbox && !checkbox.disabled) {
+                    checkbox.click();
                 }
-            }
-            return `
-                <label class="step-option gift-option ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}">
-                    <input type="checkbox" name="quest-gift" value="${i}" 
-                        ${isSelected ? 'checked' : ''} 
-                        ${isDisabled ? 'disabled' : ''}>
-                    <span class="option-text">${gift}</span>
-                </label>
-            `;
-        }).join('');
-        
-        // Atualiza contador
-        const counter = step.querySelector('#gifts-counter');
-        if (counter) {
-            counter.textContent = `${selectedGifts.length}/${maxGifts}`;
-            counter.classList.toggle('complete', selectedGifts.length === maxGifts);
-        }
-        
-        // Re-bind events
-        this.bindGiftEvents(step, config);
+            });
+        });
     },
 
     stepVows(config, saved) {

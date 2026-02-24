@@ -93,9 +93,54 @@
 .mission-target-input:focus, .gift-target-input:focus {
     outline: none;
     border-color: var(--color-blood);
+    background: var(--color-parchment);
 }
 .mission-target-input::placeholder, .gift-target-input::placeholder {
     color: var(--color-ink-medium);
+    font-style: italic;
+}
+
+/* Placeholder inline para campos não selecionados */
+.placeholder-inline {
+    display: inline-block;
+    border-bottom: 1.5px dashed var(--color-blood);
+    color: var(--color-blood);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.1em 0.2em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 6em;
+    text-align: center;
+}
+
+/* Indicador de edição */
+.edit-hint {
+    font-size: 0.8em;
+    opacity: 0.6;
+    margin-left: 0.3em;
+    transition: opacity 0.2s ease;
+    display: inline-block;
+}
+
+/* Opção com campo editável */
+.paladin-quest-builder .step-option.has-editable-field {
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.paladin-quest-builder .step-option.has-editable-field:hover {
+    border-color: var(--color-blood);
+    background: rgba(139, 58, 58, 0.05);
+}
+
+.paladin-quest-builder .step-option.has-editable-field:hover .placeholder-inline {
+    background: var(--color-blood);
+    color: var(--color-parchment-light);
+}
+
+.paladin-quest-builder .step-option.has-editable-field:hover .edit-hint {
+    opacity: 1;
 }
 .step-counter {
     margin-left: auto;
@@ -171,6 +216,11 @@
     .paladin-quest-builder .step-options {
         grid-template-columns: 1fr;
     }
+    
+    .placeholder-inline {
+        min-width: 5em;
+        font-size: 0.95em;
+    }
 }
 
 @media (max-width: 599px) {
@@ -188,6 +238,12 @@
         font-size: 16px; /* Previne zoom no iOS */
         min-height: 36px;
         padding: var(--space-2);
+        min-width: 6em;
+    }
+    
+    .placeholder-inline {
+        min-width: 5em;
+        font-size: 0.9em;
     }
     
     .paladin-quest-builder .step-option {
@@ -204,6 +260,10 @@
     .paladin-quest-builder .step-option:active {
         transform: scale(0.98);
         opacity: 0.9;
+    }
+    
+    .placeholder-inline {
+        padding: 0.2em 0.4em;
     }
 }
 
