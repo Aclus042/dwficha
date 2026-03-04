@@ -1418,3 +1418,190 @@
         transform: scale(0.98);
     }
 }
+
+/* =====================================================
+ * MODAL DE LEVEL UP - SELEÇÃO DE ATRIBUTO
+ * ===================================================== */
+
+.level-up-modal {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.level-up-modal-desc {
+    text-align: center;
+    font-size: var(--text-base);
+    color: var(--color-ink-light);
+    line-height: 1.6;
+    margin: 0;
+    padding: var(--space-2) var(--space-4);
+    background: linear-gradient(135deg, rgba(218, 165, 32, 0.08), rgba(218, 165, 32, 0.03));
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(218, 165, 32, 0.2);
+}
+
+.level-up-modal-desc strong {
+    color: var(--color-flame);
+}
+
+.level-up-attr-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+}
+
+.level-up-attr-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-2);
+    background: var(--color-parchment-light, #faf6f0);
+    border: 2px solid var(--color-border, #c4a882);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    font-family: inherit;
+    color: inherit;
+}
+
+.level-up-attr-option:hover:not(.disabled) {
+    border-color: var(--color-flame);
+    background: rgba(218, 165, 32, 0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.level-up-attr-option.selected {
+    border-color: var(--color-flame);
+    background: linear-gradient(135deg, rgba(218, 165, 32, 0.12), rgba(218, 165, 32, 0.05));
+    box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.level-up-attr-option.selected::after {
+    content: '✓';
+    position: absolute;
+    top: var(--space-1);
+    right: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-flame);
+    font-weight: bold;
+}
+
+.level-up-attr-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--color-parchment-dark, #e8dcc8);
+}
+
+.level-up-attr-name {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+}
+
+.level-up-attr-full-name {
+    font-size: var(--text-xs);
+    color: var(--color-ink-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.level-up-attr-values {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+}
+
+.level-up-attr-current {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--color-ink);
+}
+
+.level-up-attr-arrow {
+    font-size: var(--text-base);
+    color: var(--color-flame);
+}
+
+.level-up-attr-new {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--color-flame);
+}
+
+.level-up-attr-mod {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-sm);
+}
+
+.level-up-mod-current {
+    color: var(--color-ink-light);
+}
+
+.level-up-mod-arrow {
+    font-size: var(--text-xs);
+    color: var(--color-flame);
+}
+
+.level-up-mod-new {
+    color: var(--color-flame);
+    font-weight: var(--font-bold);
+}
+
+.level-up-attr-maxed {
+    font-size: var(--text-xs);
+    color: var(--color-ink-light);
+    background: rgba(0, 0, 0, 0.08);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-1);
+}
+
+.level-up-selected-info {
+    text-align: center;
+    padding: var(--space-2) var(--space-3);
+    background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(218, 165, 32, 0.04));
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(218, 165, 32, 0.25);
+}
+
+.level-up-selected-text {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold, 600);
+    color: var(--color-flame);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+    .level-up-attr-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-2);
+    }
+    
+    .level-up-attr-option {
+        padding: var(--space-2);
+    }
+    
+    .level-up-attr-name {
+        font-size: var(--text-base);
+    }
+    
+    .level-up-attr-current,
+    .level-up-attr-new {
+        font-size: var(--text-lg);
+    }
+}
+
+@media (min-width: 600px) {
+    .level-up-attr-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

@@ -842,18 +842,8 @@ const CharacterSheetPage = {
             const xpNeeded = Helpers.calculateXPToLevel(character.level);
             
             if (character.xp >= xpNeeded && character.level < 10) {
-                // Calcula novo nível e XP restante
-                const newLevel = character.level + 1;
-                const remainingXP = character.xp - xpNeeded;
-                
-                // Atualiza a Store
-                Store.setCharacterProperty('level', newLevel);
-                Store.setCharacterProperty('xp', remainingXP);
-                xpCurrent.value = remainingXP;
-                this.updateXPLevelDisplay(container);
-                
-                // Feedback visual com o nível correto
-                this.showLevelUpFeedback(newLevel);
+                // Abre o modal de seleção de atributo antes de subir de nível
+                this.openLevelUpAttributeModal(container, xpCurrent);
             }
         });
 
@@ -1410,6 +1400,158 @@ const CharacterSheetPage = {
         if (btnLevelUp) {
             btnLevelUp.disabled = !canLevelUp;
         }
+    },
+
+    /**
+     * Abre o modal para selecionar um atributo ao subir de nível
+     * @param {HTMLElement} container - Container da seção Dados
+     * @param {HTMLElement} xpInput - Input de XP para atualizar
+     */
+    openLevelUpAttributeModal(container, xpInput) {
+        const character = Store.get('character');
+        const calculated = Store.getCalculatedValues();
+        const newLevel = character.level + 1;
+
+        const ATTR_NAMES = {
+            for: { full: 'Força', short: 'FOR' },
+            des: { full: 'Destreza', short: 'DES' },
+            con: { full: 'Constituição', short: 'CON' },
+            int: { full: 'Inteligência', short: 'INT' },
+            sab: { full: 'Sabedoria', short: 'SAB' },
+            car: { full: 'Carisma', short: 'CAR' }
+        };
+
+        const MAX_ATTRIBUTE = 18;
+
+        const content = `
+            <div class="level-up-modal">
+                <p class="level-up-modal-desc">
+                    Parabéns! Seu personagem está subindo para o <strong>Nível ${newLevel}</strong>!
+                    Escolha um atributo para aumentar em <strong>+1</strong>.
+                </p>
+                <div class="level-up-attr-grid">
+                    ${Object.entries(ATTR_NAMES).map(([key, names]) => {
+                        const currentValue = character.attributes[key];
+                        const isMaxed = currentValue !== null && currentValue >= MAX_ATTRIBUTE;
+                        const mod = calculated.modifiers[key];
+                        const newValue = currentValue !== null ? currentValue + 1 : null;
+                        const newMod = newValue !== null ? Helpers.calculateModifier(newValue) : null;
+                        const modChanged = newMod !== null && newMod !== mod;
+                        const debility = character.debilities?.[key];
+                        const debPenalty = debility ? 1 : 0;
+
+                        return `
+                            <button type="button" 
+                                    class="level-up-attr-option ${isMaxed || currentValue === null ? 'disabled' : ''}" 
+                                    data-attr="${key}"
+                                    ${isMaxed || currentValue === null ? 'disabled' : ''}>
+                                <span class="level-up-attr-name">${names.short}</span>
+                                <span class="level-up-attr-full-name">${names.full}</span>
+                                <div class="level-up-attr-values">
+                                    <span class="level-up-attr-current">${currentValue !== null ? currentValue : '—'}</span>
+                                    ${!isMaxed && currentValue !== null ? `
+                                        <span class="level-up-attr-arrow">→</span>
+                                        <span class="level-up-attr-new">${newValue}</span>
+                                    ` : ''}
+                                </div>
+                                <div class="level-up-attr-mod">
+                                    <span class="level-up-mod-current">${Helpers.formatModifier(mod - debPenalty)}</span>
+                                    ${modChanged ? `
+                                        <span class="level-up-mod-arrow">→</span>
+                                        <span class="level-up-mod-new">${Helpers.formatModifier(newMod - debPenalty)}</span>
+                                    ` : ''}
+                                </div>
+                                ${isMaxed ? '<span class="level-up-attr-maxed">MÁXIMO</span>' : ''}
+                                ${currentValue === null ? '<span class="level-up-attr-maxed">NÃO DEFINIDO</span>' : ''}
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+                <div class="level-up-selected-info" style="display: none;">
+                    <span class="level-up-selected-text"></span>
+                </div>
+            </div>
+        `;
+
+        let selectedAttr = null;
+
+        const modal = Modal.create({
+            id: 'level-up-attribute',
+            title: `Subir para Nível ${newLevel}`,
+            titleIcon: '⭐',
+            content: content,
+            confirmText: 'Confirmar e Subir de Nível',
+            cancelText: 'Cancelar',
+            confirmDisabled: true,
+            onConfirm: () => {
+                if (!selectedAttr) return;
+                
+                const character = Store.get('character');
+                const xpNeeded = Helpers.calculateXPToLevel(character.level);
+                const newLevel = character.level + 1;
+                const remainingXP = character.xp - xpNeeded;
+
+                // Aumenta o atributo selecionado
+                const currentAttrValue = character.attributes[selectedAttr];
+                const newAttrValue = Math.min(currentAttrValue + 1, MAX_ATTRIBUTE);
+                
+                const newAttributes = { ...character.attributes, [selectedAttr]: newAttrValue };
+                Store.setCharacterProperty('attributes', newAttributes);
+
+                // Registra o boost no histórico
+                const boosts = character.attributeBoosts || [];
+                boosts.push({ level: newLevel, attribute: selectedAttr, from: currentAttrValue, to: newAttrValue });
+                Store.setCharacterProperty('attributeBoosts', boosts);
+
+                // Sobe de nível
+                Store.setCharacterProperty('level', newLevel);
+                Store.setCharacterProperty('xp', remainingXP);
+
+                // Se subiu CON, atualiza HP atual proporcionalmente
+                if (selectedAttr === 'con') {
+                    const classData = getClassById(character.classId);
+                    const oldMaxHP = Helpers.calculateMaxHP(classData.baseHP, currentAttrValue);
+                    const newMaxHP = Helpers.calculateMaxHP(classData.baseHP, newAttrValue);
+                    const hpDiff = newMaxHP - oldMaxHP;
+                    Store.setCharacterProperty('currentHP', character.currentHP + hpDiff);
+                }
+
+                Modal.close('level-up-attribute');
+                
+                // Atualiza a interface
+                if (xpInput) xpInput.value = remainingXP;
+                this.updateXPLevelDisplay(container);
+                this.renderSection('dados');
+                this.renderHeader();
+                this.showLevelUpFeedback(newLevel);
+            }
+        });
+
+        // Eventos dos botões de atributo
+        const overlay = document.getElementById('modal-level-up-attribute');
+        if (!overlay) return;
+
+        overlay.querySelectorAll('.level-up-attr-option:not(.disabled)').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove seleção anterior
+                overlay.querySelectorAll('.level-up-attr-option').forEach(b => b.classList.remove('selected'));
+                // Marca o selecionado
+                btn.classList.add('selected');
+                selectedAttr = btn.getAttribute('data-attr');
+
+                // Atualiza info de seleção
+                const infoDiv = overlay.querySelector('.level-up-selected-info');
+                const infoText = overlay.querySelector('.level-up-selected-text');
+                if (infoDiv && infoText) {
+                    const attrName = ATTR_NAMES[selectedAttr].full;
+                    infoDiv.style.display = 'block';
+                    infoText.textContent = `${attrName} selecionado para aumento`;
+                }
+
+                // Habilita botão de confirmar
+                Modal.setConfirmDisabled('level-up-attribute', false);
+            });
+        });
     },
 
     /**
